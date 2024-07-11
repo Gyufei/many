@@ -150,16 +150,16 @@ async function mineAction(mined) {
 }
 
 async function mineStart() {
-  // while (true) {
-  try {
-    const mined = await getMinedHash();
-    console.log(mined);
-    await mineAction(mined);
-  } catch (e) {
-    console.log(e);
-    console.log('mine failed')
+  while (true) {
+    try {
+      const mined = await getMinedHash();
+      console.log(mined);
+      await mineAction(mined);
+    } catch (e) {
+      console.log(e);
+      console.log('mine failed')
+    }
   }
-  // }
 }
 
 $(document).ready(function () {
