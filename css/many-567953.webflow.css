@@ -473,7 +473,6 @@
   color: #f79218;
 }
 
-
 .div-block-27 {
   grid-column-gap: 4px;
   grid-row-gap: 4px;
@@ -1292,8 +1291,9 @@
   }
 
   .div-block-24 {
-    padding-left: 24px;
-    padding-right: 24px;
+    border-width: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .div-block-25 {
@@ -1307,9 +1307,15 @@
   }
 
   .div-block-26 {
-    border-style: none;
+    border-width: 0;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .high-btn {
+    border-width: 2px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
   .div-block-27 {
