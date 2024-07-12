@@ -35,6 +35,7 @@
 }
 
 .div-block-2 {
+  cursor: pointer;
   background-color: rgba(17, 17, 17, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
@@ -423,7 +424,6 @@
 }
 
 .text-block-14 {
-  color: #f79218;
   text-transform: uppercase;
   font-family: Nb Architekt Webfont, sans-serif;
   font-size: 22px;
@@ -431,7 +431,11 @@
 }
 
 .div-block-24 {
-  border: 2px solid #f79218;
+  cursor: pointer;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #0f0a08;
+  color: rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   justify-content: center;
   align-items: center;
@@ -448,7 +452,6 @@
 }
 
 .text-block-15 {
-  color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   font-family: Nb Architekt Webfont, sans-serif;
   font-size: 22px;
@@ -456,10 +459,20 @@
 }
 
 .div-block-26 {
-  border: 2px solid #0f0a08;
+  cursor: pointer;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #0f0a08;
+  color: rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   padding: 4px 48px;
 }
+
+.high-btn {
+  border-color: #f79218;
+  color: #f79218;
+}
+
 
 .div-block-27 {
   grid-column-gap: 4px;
@@ -929,7 +942,7 @@
 }
 
 .section-7 {
-  background-color: #0B0A0A;
+  background-color: #0b0a0a;
   background-image: url('../images/image4x.png');
   background-position: 0 0;
   background-size: cover;
@@ -1128,6 +1141,7 @@
     width: 100%;
     font-size: 12px;
     line-height: 18px;
+    text-align: center;
   }
 
   .div-block-8 {

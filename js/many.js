@@ -178,4 +178,14 @@ $(document).ready(function () {
   $('.div-block-22').click(function () {
     mineStart();
   });
+
+  $('#mineBtn').click(function () {
+    $('#mineBtn').addClass('high-btn');
+    $('#globalBtn').removeClass('high-btn');
+  });
+
+  $('#globalBtn').click(function () {
+    $('#globalBtn').addClass('high-btn');
+    $('#mineBtn').removeClass('high-btn');
+  });
 });
