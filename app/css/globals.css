@@ -1,4 +1,4 @@
-:root {
+root {
   --white: white;
   --black: black;
 }
@@ -615,7 +615,7 @@
 }
 
 .div-block-37 {
-  background-image: url('../images/矩形-394x.png');
+  background-image: url('/images/矩形-394x.png');
   background-position: 0 0;
   background-size: cover;
   border-radius: 24px;
@@ -659,7 +659,7 @@
 }
 
 .div-block-41 {
-  background-image: url('../images/image3x-1.png'), url('../images/image3x.png');
+  background-image: url('/images/image3x-1.png'), url('/images/image3x.png');
   background-position: 0 100%, 0 0;
   background-size: cover, cover;
   border-radius: 24px;
@@ -942,7 +942,7 @@
 
 .section-7 {
   background-color: #0b0a0a;
-  background-image: url('../images/image4x.png');
+  background-image: url('/images/image4x.png');
   background-position: 0 0;
   background-size: cover;
   flex-flow: column;
@@ -1569,7 +1569,7 @@
 
   .section-7 {
     background-color: #0b0a0a;
-    background-image: url('../images/image4x-1.png');
+    background-image: url('/images/image4x-1.png');
     background-position: 50% 0;
     background-repeat: no-repeat;
     background-size: 100%;
@@ -1687,21 +1687,21 @@
 
 @font-face {
   font-family: 'Nb Architekt Webfont';
-  src: url('../fonts/nb_architekt_bold-webfont.ddb6111d.ttf') format('truetype');
+  src: url('/fonts/nb_architekt_bold-webfont.ddb6111d.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Nb Architekt Webfont';
-  src: url('../fonts/nb_architekt_regular-webfont.dc17dc5f.ttf') format('truetype');
+  src: url('/fonts/nb_architekt_regular-webfont.dc17dc5f.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Nb Architekt Webfont';
-  src: url('../fonts/nb_architekt_light-webfont.baf952ea.ttf') format('truetype');
+  src: url('/fonts/nb_architekt_light-webfont.baf952ea.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
