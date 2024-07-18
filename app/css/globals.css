@@ -284,6 +284,7 @@ root {
   padding-bottom: 16px;
   display: flex;
   box-shadow: inset 0 -2px #d3d4d6;
+  cursor: pointer;
 }
 
 .image-10 {
@@ -339,6 +340,10 @@ root {
   justify-content: center;
   align-items: center;
   display: flex;
+}
+
+.rpc-input {
+  width: 310px;
 }
 
 .text-block-11 {
@@ -1049,6 +1054,7 @@ root {
   font-family: Inter Tight, sans-serif;
   font-size: 22px;
   line-height: 32px;
+  width: 150px;
 }
 
 .div-block-63 {
@@ -1232,6 +1238,10 @@ root {
   .image-11 {
     width: 20px;
     height: 20px;
+  }
+
+  .rpc-input {
+    width: 100%;
   }
 
   .div-block-18 {
@@ -1631,6 +1641,7 @@ root {
   .text-block-46 {
     font-size: 14px;
     line-height: 20px;
+    width: auto;
   }
 
   .dropdown {
@@ -1705,4 +1716,8 @@ root {
   font-weight: 300;
   font-style: normal;
   font-display: swap;
+}
+
+.dropdown-item:hover {
+  background-color: #fff;
 }
