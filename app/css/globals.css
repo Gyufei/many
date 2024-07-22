@@ -172,7 +172,7 @@ root {
 
 .image-6 {
   z-index: 1;
-  width: 1024px;
+  width: 978px;
   height: 586px;
   display: block;
   position: relative;
@@ -1738,4 +1738,39 @@ root {
 
 .dropdown-item:hover {
   background-color: #fff;
+}
+
+.highcharts-credits {
+  display: none !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+.image-slider-container {
+  position: relative;
+  width: 755px;
+  overflow: hidden;
+}
+
+.image-slider {
+  display: flex;
+  transition: transform 0.5s linear;
+}
+
+.wallet-new-dialog {
+  font-family: Nb Architekt Webfont, sans-serif;
+}
+
+.add-dialog-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 24px;
+  height: 48px;
+  width: 210px;
+  font-family: Inter Tight, sans-serif;
 }

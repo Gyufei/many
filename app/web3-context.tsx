@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useCallback, useMemo, useState } from 'react';
 import { ChainMap, IChainInfo, TypeChain } from './lib/const';
-import { JsonRpcProvider, Wallet, Contract } from 'ethers';
+import { providers, Wallet, Contract } from 'ethers';
 import { useRpc } from './hook/use-rpc';
 import { IWallet, useWallet } from './hook/use-wallet';
 import { ABI } from './lib/abi';
@@ -20,9 +20,13 @@ interface IWeb3Context {
   wallets: IWallet[];
   addWallet: (wallet: IWallet) => void;
 
-  getProvider: () => JsonRpcProvider;
+  getProvider: () => providers.JsonRpcProvider;
   getWallet: () => Wallet | null;
+  getReadContract: () => Contract;
   getContract: () => Contract;
+
+  hashRate: string;
+  setHashRate: (value: string) => void;
 }
 
 export const Web3Context = createContext<IWeb3Context>({} as any);
@@ -35,8 +39,10 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   const { currentRpc, isCustomRpc, setCustomRpc } = useRpc(currentChain);
   const { setCurrentWallet, currentWalletInfo, wallets, addWallet, walletsMap } = useWallet();
 
+  const [hashRate, setHashRate] = useState('');
+
   const getProvider = useCallback(() => {
-    const provider = new JsonRpcProvider(currentRpc);
+    const provider = new providers.JsonRpcProvider(currentRpc);
     return provider;
   }, [currentRpc]);
 
@@ -48,9 +54,16 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
     return wallet;
   }, [currentWalletInfo, getProvider]);
 
+  const getReadContract = useCallback(() => {
+    const provider = getProvider();
+    const contract = new Contract(currentChainInfo.contractAddress, ABI, provider!);
+
+    return contract;
+  }, [currentChainInfo, getProvider]);
+
   const getContract = useCallback(() => {
     const wallet = getWallet();
-    const contract = new Contract(currentChainInfo.contractAddress, ABI, wallet);
+    const contract = new Contract(currentChainInfo.contractAddress, ABI, wallet!);
 
     return contract;
   }, [currentChainInfo, getWallet]);
@@ -75,7 +88,11 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
 
           getProvider,
           getWallet,
+          getReadContract,
           getContract,
+
+          hashRate,
+          setHashRate,
         } as IWeb3Context
       }
     >

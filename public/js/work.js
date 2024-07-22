@@ -2,10 +2,8 @@ importScripts('https://cdn.ethers.io/lib/ethers-5.2.umd.min.js');
 importScripts('https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js');
 
 self.addEventListener('message', (event) => {
-  console.log(event, 'in worker');
   const { data } = event;
   const dataReal = JSON.parse(data);
-  console.log(ethers, BigNumber)
 
   if (dataReal.type === 'start') {
     const { address, currentHash, difficultyHash } = dataReal.payload;
@@ -17,29 +15,45 @@ self.addEventListener('message', (event) => {
     const account_address_prefix = address.toLowerCase().replace(/^0x/, '').padStart(40, '0');
     const hashPrefix = currentHash + account_address_prefix;
 
-    let computed_hash;
+    let computedHash;
     let salt = new BigNumber('0x' + randomHex);
+    let beginSalt = salt;
+    const t1 = new Date().getTime();
     while (true) {
       const packed = hashPrefix + salt.toString(16).padStart(64, '0');
-      computed_hash = ethers.utils.keccak256(packed);
-      if (computed_hash < difficultyHash) {
+      computedHash = ethers.utils.keccak256(packed);
+      if (computedHash < difficultyHash) {
         break;
       }
+      const t2 = new Date().getTime();
+
       salt = salt.plus(1);
-      self.postMessage(JSON.stringify({
-        type: 'salt',
-        payload: { salt },
-      }));
     }
+    const t2 = new Date().getTime();
+    const hash_count = salt.minus(beginSalt);
+    const hashRate = (Number(hash_count) / (t2 - t1)).toFixed(2);
+
+    self.postMessage(JSON.stringify({
+      type: 'rate',
+      payload: {
+        hashRate
+      },
+    }));
 
     const saltHex = '0x' + salt.toString(16).padStart(64, '0');
+
+    const packed1 = hashPrefix + salt.toString(16).padStart(64, '0') + computedHash.slice(2) + "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+    const signature = ethers.utils.keccak256(packed1);
 
     self.postMessage(JSON.stringify({
       type: 'hash',
       payload: {
-        computed_hash,
-        salt,
+        computedHash,
+        saltHex,
+        signature,
+        hashRate
       },
     }));
+
   }
 });

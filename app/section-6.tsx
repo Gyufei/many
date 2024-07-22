@@ -1,10 +1,12 @@
+import Link from 'next/link';
+
 export default function Section6() {
   return (
     <section className="section-6">
       <div className="div-block-56">
         <div className="text-block-39">Latest about Many</div>
         <div className="div-block-57">
-          <div>
+          <Link href="">
             <img
               src="images/矩形-414x.png"
               loading="lazy"
@@ -19,8 +21,8 @@ export default function Section6() {
               Many offers a wide range of features to create and manage your project documentation. suite of collaborative editing tools
               boosts team efficiency.
             </div>
-          </div>
-          <div>
+          </Link>
+          <Link href="">
             <img
               src="images/矩形-414x.png"
               loading="lazy"
@@ -35,7 +37,7 @@ export default function Section6() {
               Many offers a wide range of features to create and manage your project documentation. suite of collaborative editing tools
               boosts team efficiency.
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </section>

@@ -2,11 +2,11 @@
 
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Web3Context } from './web3-context';
-import { formatEther, JsonRpcProvider, keccak256 } from 'ethers';
 import { Chains, TypeChain } from './lib/const';
 import BigNumber from 'bignumber.js';
 import { useRpcInput } from './hook/use-rpc-input';
 import { useBalanceDisplay } from './hook/use-balance-display';
+import NewWalletDialog from './new-wallet-dialog';
 
 export default function Section2() {
   const {
@@ -19,6 +19,7 @@ export default function Section2() {
     getProvider,
     getWallet,
     getContract,
+    setHashRate,
   } = useContext(Web3Context);
 
   const address = currentWalletInfo?.address || '';
@@ -31,19 +32,12 @@ export default function Section2() {
 
   const [showWalletSelect, setShowWalletSelect] = useState(false);
   const [showNetSelect, setShowNetSelect] = useState(false);
+  const [showNewWalletDialog, setShowNewWalletDialog] = useState(false);
 
   const [mineTimeout, setMineTimeout] = useState<number>();
   const [isMining, setIsMining] = useState(false);
 
   const workerRef = useRef<Worker>();
-
-  useEffect(() => {
-    addWallet({
-      address: '0xb347921E0524d05362D77CbBc247fc9E2Ad5dc95',
-      privateKey: 'a37e30c516210751449d62e6a8a5c17ce6025bbdc5851192013f30e90ea8d8c8',
-    });
-    setCurrentWallet('0xb347921E0524d05362D77CbBc247fc9E2Ad5dc95');
-  }, []);
 
   const shortenAddress = useMemo(() => {
     if (!address) return '';
@@ -53,6 +47,22 @@ export default function Section2() {
   function handleSelectWallet(address: string) {
     setCurrentWallet(address);
     setShowWalletSelect(false);
+  }
+
+  function handleToSelectWallet() {
+    if (isMining && !showWalletSelect) {
+      return;
+    }
+
+    setShowWalletSelect(!showWalletSelect);
+  }
+
+  function handleToSelectNet() {
+    if (isMining && !showNetSelect) {
+      return;
+    }
+
+    setShowNetSelect(!showNetSelect);
   }
 
   function handleSelectNet(chain: TypeChain) {
@@ -88,69 +98,106 @@ export default function Section2() {
     console.log('register complete');
   }
 
-  useEffect(() => {
-    const worker = new Worker('/js/work.js');
-    workerRef.current = worker;
+  async function getContractInfo() {
+    return new Promise<{
+      minedCurrentHash: string;
+      minedLastMinedAt: number;
+      difficultyHash: string;
+      minBlockTimes: string;
+    }>(async (resolve, reject) => {
+      const contractObj = getContract();
 
-    worker.addEventListener('message', (event) => {
-      const { data } = event;
-      console.log(data, 'receive form worker');
-      const dataReal = JSON.parse(data);
+      const checkHash = async () => {
+        const user_info = await contractObj.userInfoMap(address);
+        const newCurrentHash = user_info.currentHash;
 
-      if (dataReal.type === 'hash') {
-        const { computed_hash, saltHex } = data.payload;
-        mineAction({ computed_hash, saltHex });
-      }
+        if (newCurrentHash == '0x0000000000000000000000000000000000000000000000000000000000000000') {
+          await register();
+        }
 
-      if (dataReal.type === 'salt') {
+        let minedCurrentHash = null;
+        let minedLastMinedAt = 0;
+
+        if (currentHash !== newCurrentHash) {
+          setCurrentHash(user_info.currentHash);
+          setLastMinedAt(user_info.lastMinedAt);
+
+          minedCurrentHash = user_info.currentHash;
+          minedLastMinedAt = user_info.lastMinedAt;
+
+          const treasuryInfo = await contractObj.treasuryInfo();
+          const difficultyHash = treasuryInfo.difficultyHash;
+          const minBlockTimes = treasuryInfo.minBlockTimes.toString();
+
+          resolve({
+            minedCurrentHash,
+            minedLastMinedAt,
+            difficultyHash,
+            minBlockTimes,
+          });
+        } else {
+          setTimeout(checkHash, 1000);
+        }
+      };
+
+      try {
+        await checkHash();
+      } catch (e) {
+        console.error(e);
+        reject(e);
       }
     });
-
-    // 在组件卸载时终止Web Worker
-    return () => {
-      worker.terminate();
-    };
-  }, []);
-
-  async function getContractInfo() {
-    const contractObj = getContract();
-
-    const user_info = await contractObj.userInfoMap(address);
-    const currentHash = user_info.currentHash;
-    const lastMinedAt = user_info.lastMinedAt;
-
-    if (currentHash == '0x0000000000000000000000000000000000000000000000000000000000000000') {
-      await register();
-    }
-
-    const treasuryInfo = await contractObj.treasuryInfo();
-    const difficultyHash = treasuryInfo.difficultyHash;
-    const minBlockTimes = treasuryInfo.minBlockTimes.toString();
-
-    return {
-      currentHash,
-      lastMinedAt,
-      difficultyHash,
-      minBlockTimes,
-    };
   }
 
-  async function mineAction(mined: { computed_hash: string; saltHex: string }) {
+  async function mineAction(mined: { computedHash: string; saltHex: string; signature: string }) {
     const contractObj = getContract();
-    const gasLimit = await (contractObj.estimateGas as any)['mine'](mined.computed_hash, mined.saltHex);
+    const gasLimit = await (contractObj.estimateGas as any)['mine'](mined.computedHash, mined.saltHex, mined.signature);
 
-    await contractObj.mine(mined.computed_hash, mined.saltHex, {
+    await contractObj.mine(mined.computedHash, mined.saltHex, mined.signature, {
       gasLimit: gasLimit.toString(),
     });
   }
 
+  const [currentHash, setCurrentHash] = useState<string | null>(null);
+  const [lastMinedAt, setLastMinedAt] = useState<number>(0);
+
   async function mineStart() {
+    if (!currentWalletInfo) {
+      return;
+    }
+
     try {
+      if (workerRef.current) {
+        workerRef.current.terminate();
+      }
+
+      const worker = new Worker('/js/work.js');
+      workerRef.current = worker;
+
       setIsMining(true);
-      const { currentHash, lastMinedAt, difficultyHash, minBlockTimes } = await getContractInfo();
+
+      worker.addEventListener('message', (event) => {
+        const { data } = event;
+        console.log(data, 'receive form worker');
+        const dataReal = JSON.parse(data);
+
+        if (dataReal.type === 'hash') {
+          const { computedHash, saltHex, signature, hashRate } = dataReal.payload;
+          mineAction({ computedHash, saltHex, signature }).then(() => {
+            mineStart();
+          });
+        }
+
+        if (dataReal.type === 'rate') {
+          const { hashRate } = dataReal.payload;
+          setHashRate(hashRate);
+        }
+      });
+
+      const { minedCurrentHash, minedLastMinedAt, difficultyHash, minBlockTimes } = await getContractInfo();
 
       const now_at = new Date().getTime();
-      const lMinedAt = Number(lastMinedAt) * 1000;
+      const lMinedAt = Number(minedLastMinedAt) * 1000;
       const minBTimes = Number(minBlockTimes) * 1000;
 
       let timeout: number;
@@ -158,20 +205,17 @@ export default function Section2() {
         timeout = setTimeout(() => {
           mineStart();
         }, lMinedAt + minBTimes - now_at) as any;
-      } else {
-        timeout = setTimeout(() => {
-          mineStart();
-        }, minBTimes) as any;
+        setMineTimeout(timeout);
+        return;
       }
-      setMineTimeout(timeout);
-      console.log('mine timeout:', timeout);
 
-      workerRef.current?.postMessage(JSON.stringify({ type: 'start', payload: { address, currentHash, difficultyHash } }));
-      // console.log(mined);
-      // await mineAction(mined);
+      workerRef.current?.postMessage(
+        JSON.stringify({ type: 'start', payload: { address, currentHash: minedCurrentHash, difficultyHash } })
+      );
     } catch (e) {
-      console.log(e);
-      console.log('mine failed');
+      console.log('mine failed', e);
+      setIsMining(false);
+      workerRef.current?.terminate();
     }
   }
 
@@ -184,8 +228,55 @@ export default function Section2() {
     setIsMining(false);
   }
 
+  const sliderRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (isMining) {
+      handleStartClick();
+    }
+  }, [isMining]);
+
+  const handleStartClick = () => {
+    if (!sliderRef.current || !isMining) {
+      return;
+    }
+
+    sliderRef.current.style.transform = 'translateX(0)';
+    animateSlider();
+  };
+
+  const animateSlider = () => {
+    let position = -95;
+    const sliderElement = sliderRef.current;
+
+    const slide = () => {
+      if (!sliderElement || !isMining) {
+        return;
+      }
+
+      if (position >= 0) {
+        position = -95;
+      }
+      position += 1;
+      sliderElement.style.transform = `translateX(${position}%)`;
+      setTimeout(() => {
+        slide();
+      }, 300);
+    };
+
+    slide();
+  };
+
+  function handleCopy() {
+    if (!currentWalletInfo) {
+      return;
+    }
+
+    navigator.clipboard.writeText(currentWalletInfo.address);
+  }
+
   return (
-    <section className="section-2">
+    <section className="section-2" id="section2">
       <div className="div-block-9">
         <h1 className="heading">system</h1>
         <div className="div-block-10">
@@ -195,11 +286,8 @@ export default function Section2() {
                 <div className="div-block-13">
                   <div className="text-block-6">Account</div>
                   <div className="div-block-12">
-                    <div className="div-block-11">
-                      <div className="text-block-7">New</div>
-                      <img src="images/添加.svg" loading="lazy" alt="" className="image-8" />
-                    </div>
-                    <div className="div-block-11">
+                    <NewWalletDialog />
+                    <div className="div-block-11" style={{ cursor: 'pointer' }} onClick={handleCopy}>
                       <div className="text-block-7">COPY</div>
                       <img src="images/copy.svg" loading="lazy" alt="" className="image-9" />
                     </div>
@@ -211,9 +299,15 @@ export default function Section2() {
                 style={{
                   position: 'relative',
                 }}
-                onClick={() => setShowWalletSelect(!showWalletSelect)}
+                onClick={() => handleToSelectWallet()}
               >
-                <div className="text-block-8" id="account">
+                <div
+                  className="text-block-8"
+                  id="account"
+                  style={{
+                    width: '500px',
+                  }}
+                >
                   {address}
                 </div>
                 <div className="text-block-44" id="accountMb">
@@ -232,30 +326,38 @@ export default function Section2() {
                   <nav
                     style={{
                       position: 'absolute',
-                      top: 'calc(100% + 1px)',
+                      top: 'calc(100% + 12px)',
                       left: 0,
-                      padding: '4px',
-                      borderRadius: '4px',
                       right: 0,
-                      backgroundColor: '#e6e6e6',
-                      zIndex: 10,
+                      padding: '12px 16px',
+                      borderRadius: '16px',
+                      backgroundColor: '#F5F5F5',
+                      zIndex: 901,
+                      border: '2px solid #D3D4D6',
                     }}
                   >
                     {wallets.map((wallet, index) => (
                       <div
                         key={index}
-                        className="dropdown-item"
                         style={{
-                          padding: '12px 10px',
-                          borderRadius: '4px',
+                          padding: '16px 0px',
+                          borderBottom: index !== wallets.length - 1 ? '1px solid #D3D4D6' : 'none',
+                          display: 'flex',
+                          justifyContent: 'space-between',
                         }}
                         onClick={() => handleSelectWallet(wallet.address)}
                       >
-                        <div className="text-block-8" id="account">
-                          {wallet.address}
-                        </div>
-                        <div className="text-block-44" id="accountMb">
-                          {shortenAddress}
+                        <div className="text-block-8">{wallet.address}</div>
+                        <div className="text-block-44">{shortenAddress}</div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {wallet.address === currentWalletInfo?.address && (
+                            <img src="images/check.svg" loading="lazy" alt="" className="image-9" />
+                          )}
                         </div>
                       </div>
                     ))}
@@ -273,7 +375,7 @@ export default function Section2() {
           <div className="div-block-17">
             <div>
               <div className="text-block-6">network</div>
-              <div data-hover="false" data-delay="0" className="dropdown w-dropdown" onClick={() => setShowNetSelect(!showNetSelect)}>
+              <div data-hover="false" data-delay="0" className="dropdown w-dropdown" onClick={() => handleToSelectNet()}>
                 <div className="dropdown-toggle w-dropdown-toggle">
                   <div className="div-block-63">
                     <img width="32" height="32" alt="" src={currentChainInfo.logo} loading="lazy" className="image-11" id="chainLogo" />
@@ -287,22 +389,22 @@ export default function Section2() {
                   <nav
                     style={{
                       position: 'absolute',
-                      top: 'calc(100% + 1px)',
+                      top: 'calc(100% + 12px)',
                       left: 0,
-                      padding: '4px',
-                      borderRadius: '4px',
                       right: 0,
-                      backgroundColor: '#e6e6e6',
-                      zIndex: 10,
+                      padding: '12px 16px',
+                      borderRadius: '16px',
+                      backgroundColor: '#F5F5F5',
+                      zIndex: 901,
+                      border: '2px solid #D3D4D6',
                     }}
                   >
                     {Chains.map((chain, index) => (
                       <div
                         key={index}
-                        className="dropdown-item"
                         style={{
-                          padding: '12px 10px',
-                          borderRadius: '4px',
+                          padding: '16px 0px',
+                          borderBottom: index !== Chains.length - 1 ? '1px solid #D3D4D6' : 'none',
                         }}
                         onClick={() => setCurrentChain(chain.name)}
                       >
@@ -379,7 +481,13 @@ export default function Section2() {
               <div className="text-block-9">
                 <strong>mining status</strong>
               </div>
-              <img src="images/路径-1.svg" loading="lazy" alt="" className="image-13" />
+              <div className="image-slider-container">
+                {isMining && (
+                  <div ref={sliderRef} className="image-slider">
+                    <img src="images/路径-1.svg" loading="lazy" alt="" className="image-13" />
+                  </div>
+                )}
+              </div>
             </div>
             <div className="div-block-20">
               <div className="text-block-9">

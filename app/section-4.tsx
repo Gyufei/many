@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Section4() {
   return (
     <section className="section-4">
@@ -9,13 +11,13 @@ export default function Section4() {
           opportunities for developers and product teams alike.
         </div>
         <div className="div-block-38">
-          <div className="div-block-37">
+          <Link href="" className="div-block-37">
             <div className="div-block-39">
               <div className="text-block-24">Fair launch.</div>
               <div className="text-block-25">Immutable code.</div>
             </div>
-          </div>
-          <div className="div-block-41">
+          </Link>
+          <Link href="" className="div-block-41">
             <div className="div-block-42">
               <div className="text-block-26">mining guard. </div>
               <div className="text-block-27">
@@ -24,7 +26,7 @@ export default function Section4() {
                 tampering or removal.
               </div>
             </div>
-          </div>
+          </Link>
         </div>
         <div className="text-block-28">Tokenomics</div>
         <div className="div-block-44">

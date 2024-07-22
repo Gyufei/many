@@ -1,296 +1,737 @@
 export const ABI = [
-  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
-    type: 'function',
-    name: 'NFT_MULTIPLIER_DECALER',
     inputs: [],
-    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
-    stateMutability: 'view',
+    stateMutability: 'nonpayable',
+    type: 'constructor',
   },
-  { type: 'function', name: 'claim', inputs: [], outputs: [], stateMutability: 'nonpayable' },
   {
-    type: 'function',
-    name: 'emergencyWithdraw',
+    inputs: [],
+    name: 'EnforcedPause',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'ExpectedPause',
+    type: 'error',
+  },
+  {
     inputs: [
-      { name: 'account', type: 'address', internalType: 'address' },
-      { name: 'token', type: 'address', internalType: 'address' },
-      { name: 'amount', type: 'uint256', internalType: 'uint256' },
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
     ],
+    name: 'OwnableInvalidOwner',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'OwnableUnauthorizedAccount',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'claimRewards',
+        type: 'uint256',
+      },
+    ],
+    name: 'Claim',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'rewardToken',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'rewardRate',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'epochRewards',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'minBlockTimes',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'difficultyHash',
+        type: 'bytes32',
+      },
+    ],
+    name: 'Initialize',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'currentHash',
+        type: 'bytes32',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'lastMinedAt',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'minedHash',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'salt',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'rewardRate',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'claimableRewards',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'totalHashes',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'totalRewards',
+        type: 'uint256',
+      },
+    ],
+    name: 'Mine',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipTransferred',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'Paused',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'bytes32',
+        name: 'currentHash',
+        type: 'bytes32',
+      },
+    ],
+    name: 'Register',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'epochRewards',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'rewardRate',
+        type: 'uint256',
+      },
+    ],
+    name: 'ResetTreasury',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'difficultyHash',
+        type: 'bytes32',
+      },
+    ],
+    name: 'SetDifficultyHash',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+    ],
+    name: 'SetImplementation',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'minBlockTimes',
+        type: 'uint256',
+      },
+    ],
+    name: 'SetMinBlockTimes',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'nftToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'nftMultiplier',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'enum MinerStorage.NFTMiningLevel',
+        name: 'level',
+        type: 'uint8',
+      },
+    ],
+    name: 'SetNFTMiningInfo',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'status',
+        type: 'bool',
+      },
+    ],
+    name: 'SetPauseStatus',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'rewardRate',
+        type: 'uint256',
+      },
+    ],
+    name: 'SetRewardRate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'rewardToken',
+        type: 'address',
+      },
+    ],
+    name: 'SetRewardToken',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'Unpaused',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'NFT_MULTIPLIER_DECALER',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'duration',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'emergencyWithdraw',
     outputs: [],
     stateMutability: 'payable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_minBlockTimes',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '_epochRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '_rewardRate',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes32',
+        name: '_difficultyHash',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'address',
+        name: '_rewardToken',
+        type: 'address',
+      },
+    ],
     name: 'initialize',
-    inputs: [
-      { name: '_minBlockTimes', type: 'uint256', internalType: 'uint256' },
-      { name: '_epochRewards', type: 'uint256', internalType: 'uint256' },
-      { name: '_rewardRate', type: 'uint256', internalType: 'uint256' },
-      { name: '_difficultyHash', type: 'bytes32', internalType: 'bytes32' },
-      { name: '_nftMultiplier', type: 'uint256', internalType: 'uint256' },
-      { name: '_nftToken', type: 'address', internalType: 'address' },
-      { name: '_rewardToken', type: 'address', internalType: 'address' },
-    ],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'minedHash',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'salt',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'signature',
+        type: 'bytes32',
+      },
+    ],
     name: 'mine',
-    inputs: [
-      { name: 'minedHash', type: 'bytes32', internalType: 'bytes32' },
-      { name: 'salt', type: 'bytes32', internalType: 'bytes32' },
-    ],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
-    name: 'nftToken',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    inputs: [
+      {
+        internalType: 'enum MinerStorage.NFTMiningLevel',
+        name: '',
+        type: 'uint8',
+      },
+    ],
+    name: 'nftMiningInfoMap',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'nftMultiplier',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'nftToken',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [],
     name: 'owner',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
-  },
-  { type: 'function', name: 'paused', inputs: [], outputs: [{ name: '', type: 'bool', internalType: 'bool' }], stateMutability: 'view' },
-  { type: 'function', name: 'register', inputs: [], outputs: [], stateMutability: 'nonpayable' },
-  { type: 'function', name: 'renounceOwnership', inputs: [], outputs: [], stateMutability: 'nonpayable' },
-  {
     type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'paused',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'register',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_epochRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '_rewardRate',
+        type: 'uint256',
+      },
+    ],
     name: 'resetTreasury',
-    inputs: [
-      { name: '_epochRewards', type: 'uint256', internalType: 'uint256' },
-      { name: '_rewardRate', type: 'uint256', internalType: 'uint256' },
-    ],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [],
     name: 'rewardToken',
-    inputs: [],
-    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: '_difficultyHash',
+        type: 'bytes32',
+      },
+    ],
     name: 'setDifficultyHash',
-    inputs: [{ name: '_difficultyHash', type: 'bytes32', internalType: 'bytes32' }],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_minBlockTimes',
+        type: 'uint256',
+      },
+    ],
     name: 'setMinBlockTimes',
-    inputs: [{ name: '_minBlockTimes', type: 'uint256', internalType: 'uint256' }],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
-    name: 'setNftMultiplier',
-    inputs: [{ name: '_nftMultiplier', type: 'uint256', internalType: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'enum MinerStorage.NFTMiningLevel',
+        name: '_level',
+        type: 'uint8',
+      },
+      {
+        internalType: 'address',
+        name: '_nftToken',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '_nftMultiplier',
+        type: 'uint256',
+      },
+    ],
+    name: 'setNFTMiningInfo',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
-    name: 'setNftToken',
-    inputs: [{ name: '_nftToken', type: 'address', internalType: 'address' }],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'bool',
+        name: 'pauseSatus',
+        type: 'bool',
+      },
+    ],
     name: 'setPauseStatus',
-    inputs: [{ name: 'pauseSatus', type: 'bool', internalType: 'bool' }],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_rewardRate',
+        type: 'uint256',
+      },
+    ],
     name: 'setRewardRate',
-    inputs: [{ name: '_rewardRate', type: 'uint256', internalType: 'uint256' }],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_rewardToken',
+        type: 'address',
+      },
+    ],
     name: 'setRewardToken',
-    inputs: [{ name: '_rewardToken', type: 'address', internalType: 'address' }],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
     name: 'transferOwnership',
-    inputs: [{ name: 'newOwner', type: 'address', internalType: 'address' }],
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    type: 'function',
-    name: 'treasuryInfo',
     inputs: [],
+    name: 'treasuryInfo',
     outputs: [
-      { name: 'minBlockTimes', type: 'uint256', internalType: 'uint256' },
-      { name: 'difficultyHash', type: 'bytes32', internalType: 'bytes32' },
-      { name: 'rewardRate', type: 'uint256', internalType: 'uint256' },
-      { name: 'epochRewards', type: 'uint256', internalType: 'uint256' },
-      { name: 'epochTotalHashs', type: 'uint256', internalType: 'uint256' },
-      { name: 'epochClaimedRewards', type: 'uint256', internalType: 'uint256' },
-      { name: 'nftMultiplier', type: 'uint256', internalType: 'uint256' },
-      { name: 'lastResetAt', type: 'uint256', internalType: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: 'minBlockTimes',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'difficultyHash',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'uint256',
+        name: 'rewardRate',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'epochRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'epochTotalHashs',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'epochClaimedRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'lastResetAt',
+        type: 'uint256',
+      },
     ],
     stateMutability: 'view',
-  },
-  {
     type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     name: 'userInfoMap',
-    inputs: [{ name: '', type: 'address', internalType: 'address' }],
     outputs: [
-      { name: 'currentHash', type: 'bytes32', internalType: 'bytes32' },
-      { name: 'claimableRewards', type: 'uint256', internalType: 'uint256' },
-      { name: 'totalHashes', type: 'uint256', internalType: 'uint256' },
-      { name: 'totalRewards', type: 'uint256', internalType: 'uint256' },
-      { name: 'lastMinedAt', type: 'uint256', internalType: 'uint256' },
+      {
+        internalType: 'bytes32',
+        name: 'currentHash',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'uint256',
+        name: 'claimableRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalHashes',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalRewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'registerAt',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'lastMinedAt',
+        type: 'uint256',
+      },
     ],
     stateMutability: 'view',
+    type: 'function',
   },
-  {
-    type: 'event',
-    name: 'Claim',
-    inputs: [
-      { name: 'user', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'claimRewards', type: 'uint256', indexed: false, internalType: 'uint256' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Initialize',
-    inputs: [
-      { name: 'rewardToken', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'nftToken', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'rewardRate', type: 'uint256', indexed: true, internalType: 'uint256' },
-      { name: 'epochRewards', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'minBlockTimes', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'nftMultiplier', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'difficultyHash', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Mine',
-    inputs: [
-      { name: 'user', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'currentHash', type: 'bytes32', indexed: true, internalType: 'bytes32' },
-      { name: 'lastMinedAt', type: 'uint256', indexed: true, internalType: 'uint256' },
-      { name: 'minedHash', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'salt', type: 'bytes32', indexed: false, internalType: 'bytes32' },
-      { name: 'rewardRate', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'claimableRewards', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'totalHashes', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'totalRewards', type: 'uint256', indexed: false, internalType: 'uint256' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'OwnershipTransferred',
-    inputs: [
-      { name: 'previousOwner', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'newOwner', type: 'address', indexed: true, internalType: 'address' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Paused',
-    inputs: [{ name: 'account', type: 'address', indexed: false, internalType: 'address' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Register',
-    inputs: [
-      { name: 'user', type: 'address', indexed: true, internalType: 'address' },
-      { name: 'currentHash', type: 'bytes32', indexed: true, internalType: 'bytes32' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'ResetTreasury',
-    inputs: [
-      { name: 'epochRewards', type: 'uint256', indexed: false, internalType: 'uint256' },
-      { name: 'rewardRate', type: 'uint256', indexed: false, internalType: 'uint256' },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetDifficultyHash',
-    inputs: [{ name: 'difficultyHash', type: 'bytes32', indexed: false, internalType: 'bytes32' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetImplementation',
-    inputs: [{ name: 'newImplementation', type: 'address', indexed: true, internalType: 'address' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetMinBlockTimes',
-    inputs: [{ name: 'minBlockTimes', type: 'uint256', indexed: false, internalType: 'uint256' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetNftMultiplier',
-    inputs: [{ name: 'nftMultiplier', type: 'uint256', indexed: false, internalType: 'uint256' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetNftToken',
-    inputs: [{ name: 'nftToken', type: 'address', indexed: false, internalType: 'address' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetPauseStatus',
-    inputs: [{ name: 'status', type: 'bool', indexed: false, internalType: 'bool' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetRewardRate',
-    inputs: [{ name: 'rewardRate', type: 'uint256', indexed: false, internalType: 'uint256' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'SetRewardToken',
-    inputs: [{ name: 'rewardToken', type: 'address', indexed: false, internalType: 'address' }],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Unpaused',
-    inputs: [{ name: 'account', type: 'address', indexed: false, internalType: 'address' }],
-    anonymous: false,
-  },
-  { type: 'error', name: 'EnforcedPause', inputs: [] },
-  { type: 'error', name: 'ExpectedPause', inputs: [] },
-  { type: 'error', name: 'OwnableInvalidOwner', inputs: [{ name: 'owner', type: 'address', internalType: 'address' }] },
-  { type: 'error', name: 'OwnableUnauthorizedAccount', inputs: [{ name: 'account', type: 'address', internalType: 'address' }] },
 ];

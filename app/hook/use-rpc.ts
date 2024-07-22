@@ -6,14 +6,9 @@ const StorageKey = 'CustomRpc';
 export function useRpc(currentChain: TypeChain) {
   const currentChainInfo = ChainMap[currentChain];
 
-  const [customRpcMap, setCustomRpcMap] = useState<Record<TypeChain, string>>(() => {
-    const storageCustomRpc = localStorage.getItem(StorageKey);
-    return storageCustomRpc
-      ? JSON.parse(storageCustomRpc)
-      : {
-          Mantle: null,
-          Eth: null,
-        };
+  const [customRpcMap, setCustomRpcMap] = useState<Record<TypeChain, string>>({
+    Mantle: '',
+    Eth: '',
   });
 
   const isCustomRpc = useMemo(() => {
@@ -22,7 +17,7 @@ export function useRpc(currentChain: TypeChain) {
 
   const currentRpc = useMemo(() => {
     const custom = customRpcMap[currentChain];
-    if (!custom) return currentChainInfo.rpcUrls.http;
+    if (!custom) return currentChainInfo?.rpcUrls?.http;
 
     return customRpcMap[currentChain];
   }, [customRpcMap, currentChain]);
@@ -34,18 +29,20 @@ export function useRpc(currentChain: TypeChain) {
     });
   }, []);
 
-  // useEffect(() => {
-  //   // 在组件挂载时，从 localStorage 恢复值
-  //   const savedValue = localStorage.getItem(StorageKey);
-  //   if (savedValue) {
-  //     const rpcs = JSON.parse(savedValue);
-  //     setCurrentRpc(savedValue);
-  //   }
-  // }, []);
+  useEffect(() => {
+    // 在组件挂载时，从 localStorage 恢复值
+    const savedValue = localStorage.getItem(StorageKey);
+    if (savedValue) {
+      const rpcs = JSON.parse(savedValue);
+      setCustomRpcMap(rpcs);
+    }
+  }, []);
 
   useEffect(() => {
-    const serializedValue = JSON.stringify(customRpcMap);
-    localStorage.setItem(StorageKey, serializedValue);
+    if (customRpcMap.Mantle || customRpcMap.Eth) {
+      const serializedValue = JSON.stringify(customRpcMap);
+      localStorage.setItem(StorageKey, serializedValue);
+    }
   }, [customRpcMap]);
 
   return {

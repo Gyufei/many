@@ -3,6 +3,7 @@ export interface IChainInfo {
   name: 'Mantle' | 'Eth';
   logo: string;
   contractAddress: string;
+  addressBlock: number;
   nativeCurrency: {
     decimals: number;
     name: string;
@@ -42,7 +43,8 @@ const EthChain: IChainInfo = {
     },
   },
   testnet: true,
-  contractAddress: '0x529537BB5EE0A499F2A2A905E1d733d882532A4E',
+  contractAddress: '0x593e5aDffb7755213Ecd366bD563D8a52D0C0f32',
+  addressBlock: 9827607
 };
 
 // Mantle Sepolia
@@ -66,7 +68,8 @@ const MantleChain: IChainInfo = {
     },
   },
   testnet: true,
-  contractAddress: '0xCc6C4EB28d9fFFDbD18d94BFd385F53c1Df60CB5',
+  contractAddress: '0xeA6C1670AD3771ccf1cB86C4db5A9b8C8B50C53c',
+  addressBlock: 10000
 };
 
 export const Chains = [MantleChain, EthChain];

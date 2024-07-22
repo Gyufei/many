@@ -1,3 +1,5 @@
+import StartMiningBtn from './start-mining-btn';
+
 export default function Section7() {
   return (
     <section className="section-7">
@@ -8,7 +10,7 @@ export default function Section7() {
           Remember, this journey is just getting started.
         </div>
         <div className="div-block-5 mt-80">
-          <div className="text-block-4">START MINING</div>
+          <StartMiningBtn />
           <img src="images/箭头右_arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
           <div className="div-block-6"></div>
         </div>

@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from 'ethers';
+import { providers } from 'ethers';
 import { Web3Context } from '../web3-context';
 import { useContext, useState } from 'react';
 
@@ -31,7 +31,7 @@ export function useRpcInput(currChainId: number) {
     try {
       if (!currChainId) return false;
 
-      const provider = new JsonRpcProvider(customRpcValue);
+      const provider = new providers.JsonRpcProvider(customRpcValue);
       const net = await provider.getNetwork();
       const chainId = Number(net.chainId);
 
@@ -49,6 +49,6 @@ export function useRpcInput(currChainId: number) {
     setCustomRpcValue,
     handleInputKeyDown,
     handleOnBlur,
-    handleSaveRpc
+    handleSaveRpc,
   };
 }
