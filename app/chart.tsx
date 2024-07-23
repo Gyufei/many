@@ -135,7 +135,7 @@ export default function RateChart(props: any) {
         footerFormat: '',
       },
     }),
-    []
+    [isDesktop]
   );
 
   return <HighchartsReact highcharts={Highcharts} options={options} ref={chartComponentRef} {...props} />;

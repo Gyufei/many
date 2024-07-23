@@ -9,11 +9,7 @@ export default function Section7() {
           Unlock the future of productivity with Many. <br />
           Remember, this journey is just getting started.
         </div>
-        <div className="div-block-5 mt-80">
-          <StartMiningBtn />
-          <img src="images/箭头右_arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
-          <div className="div-block-6"></div>
-        </div>
+        <StartMiningBtn />
       </div>
       <div className="div-block-59">
         <div className="div-block-60">

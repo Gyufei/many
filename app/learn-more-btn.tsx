@@ -1,22 +1,13 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useBtnHoverPosition } from './hook/use-btn-hover-position';
 
-export default function StartMiningBtn() {
+export function LearnMoreBtn() {
   const { blockPosition, handleMouseEnter, handleMouseLeave, handleMouseMove } = useBtnHoverPosition();
-
-  function scrollToAnchor() {
-    const element = document.getElementById('section2');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
   return (
-    <div onMouseMove={handleMouseMove} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="div-block-5 mt-80">
-      <div className="text-block-4" onClick={scrollToAnchor}>
-        START MINING
-      </div>
+    <div onMouseMove={handleMouseMove} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="div-block-5">
+      <div className="text-block-4">Learn More About Powfi</div>
       <img src="images/箭头右_arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
       <div
         style={{

@@ -1,4 +1,5 @@
 import RateChart from './chart';
+import { LearnMoreBtn } from './learn-more-btn';
 
 export default function Section1() {
   return (
@@ -22,11 +23,7 @@ export default function Section1() {
             <br />
             Slack, and Notion.
           </div>
-          <div className="div-block-5">
-            <div className="text-block-4">Learn More About Powfi</div>
-            <img src="images/箭头右_arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
-            <div className="div-block-6"></div>
-          </div>
+          <LearnMoreBtn />
         </div>
       </div>
       <div className="div-block-413">
