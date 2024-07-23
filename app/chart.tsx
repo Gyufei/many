@@ -4,12 +4,14 @@ import Highcharts, { Options } from 'highcharts';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 import { Web3Context } from './web3-context';
+import { useMediaQuery } from './hook/use-media-query';
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts);
 }
 
 export default function RateChart(props: any) {
+  const isDesktop = useMediaQuery('(min-width: 380px)');
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
   const { hashRate } = useContext(Web3Context);
@@ -21,16 +23,12 @@ export default function RateChart(props: any) {
     }
   }, [hashRate]);
 
-  const isMobile = useMemo(() => {
-    return window.innerWidth < 768;
-  }, []);
-
   const options = useMemo<Options>(
     () => ({
       chart: {
         backgroundColor: '#050303',
         type: 'line',
-        height: isMobile ? 199 : 585,
+        height: isDesktop ? 585 : 199,
       },
       title: undefined,
       exporting: {
