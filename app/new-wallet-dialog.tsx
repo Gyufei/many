@@ -1,5 +1,5 @@
 import { Wallet } from 'ethers';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Web3Context } from './web3-context';
 
 export default function NewWalletDialog() {
@@ -25,6 +25,18 @@ export default function NewWalletDialog() {
     console.log(newWallet);
     setNewWallet(newWallet);
   }
+
+  useEffect(() => {
+    function preventDefault(event: any) {
+      event.preventDefault();
+    }
+
+    if (visible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'visible';
+    }
+  }, [visible]);
 
   function handleCancel() {
     setVisible(false);
@@ -60,52 +72,44 @@ export default function NewWalletDialog() {
         }}
       >
         <div
+          className="wallet-new-dialog-content"
           style={{
-            width: '480px',
             background: '#fff',
-            borderRadius: '24px',
-            padding: '24px',
           }}
         >
           <div
+            className="wallet-new-dialog-title"
             style={{
               textAlign: 'center',
-              fontSize: '24px',
-              lineHeight: '36px',
               color: '#111',
             }}
           >
             Add Existing Account
           </div>
           <div
+            className="wallet-new-dialog-subtitle"
             style={{
-              marginTop: '16px',
               textAlign: 'center',
-              fontSize: '18px',
-              lineHeight: '22px',
               color: 'rgba(17, 17, 17, 0.5)',
             }}
           >
             Enter your12-word Recovery Phrase
           </div>
           <div
+            className="wallet-new-dialog-phrase"
             style={{
-              marginTop: '12px',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '12px 12px',
             }}
           >
             {phraseArray.map((item, index) => (
               <div
+                className="wallet-new-dialog-phrase-item"
                 key={index}
                 style={{
-                  width: '136px',
-                  height: '48px',
                   border: '1px solid #d3d4d6',
-                  borderRadius: '12px',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -116,8 +120,8 @@ export default function NewWalletDialog() {
             ))}
           </div>
           <div
+            className="wallet-new-dialog-btns"
             style={{
-              marginTop: '24px',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',

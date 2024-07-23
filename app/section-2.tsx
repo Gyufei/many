@@ -39,9 +39,13 @@ export default function Section2() {
 
   const workerRef = useRef<Worker>();
 
-  const shortenAddress = useMemo(() => {
+  function shorterAddress(address: string) {
     if (!address) return '';
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }
+
+  const shortenAddress = useMemo(() => {
+    return shorterAddress(address);
   }, [address]);
 
   function handleSelectWallet(address: string) {
@@ -348,7 +352,7 @@ export default function Section2() {
                         onClick={() => handleSelectWallet(wallet.address)}
                       >
                         <div className="text-block-8">{wallet.address}</div>
-                        <div className="text-block-44">{shortenAddress}</div>
+                        <div className="text-block-44">{shorterAddress(wallet.address)}</div>
                         <div
                           style={{
                             display: 'flex',
@@ -477,7 +481,7 @@ export default function Section2() {
             </div>
           </div>
           <div className="div-block-19">
-            <div>
+            <div className="div-block-mining">
               <div className="text-block-9">
                 <strong>mining status</strong>
               </div>

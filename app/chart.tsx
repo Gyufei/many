@@ -21,12 +21,16 @@ export default function RateChart(props: any) {
     }
   }, [hashRate]);
 
+  const isMobile = useMemo(() => {
+    return window.innerWidth < 768;
+  }, []);
+
   const options = useMemo<Options>(
     () => ({
       chart: {
         backgroundColor: '#050303',
         type: 'line',
-        height: 586,
+        height: isMobile ? 199 : 585,
       },
       title: undefined,
       exporting: {

@@ -15,10 +15,8 @@ export default function Section3() {
   const [logs, setLogs] = useState<any[]>([]);
 
   const displayLogs = useMemo(() => {
-    console.log(currentTab, 'tab');
     if (currentTab === 'mine') {
       const mineLogs = logs.filter((log) => log.sender === currentWalletInfo?.address);
-      console.log(mineLogs, 'mineLogs');
       return mineLogs;
     }
     return logs;

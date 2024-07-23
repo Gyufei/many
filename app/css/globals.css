@@ -250,6 +250,54 @@ root {
   line-height: 30px;
 }
 
+.wallet-new-dialog {
+  font-family: Nb Architekt Webfont, sans-serif;
+}
+
+.wallet-new-dialog-content {
+  width: 480px;
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.wallet-new-dialog-title {
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.wallet-new-dialog-subtitle {
+  margin-top: 16px;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.wallet-new-dialog-phrase {
+  margin-top: 12px;
+  gap: 12px 12px;
+}
+
+.wallet-new-dialog-phrase-item {
+  width: 136px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.wallet-new-dialog-btns {
+  margin-top: 24px;
+}
+
+.add-dialog-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 24px;
+  height: 48px;
+  width: 210px;
+  font-family: Inter Tight, sans-serif;
+}
+
 .div-block-11 {
   grid-column-gap: 8px;
   grid-row-gap: 8px;
@@ -357,6 +405,22 @@ root {
   width: 24px;
   height: 24px;
   margin-left: 12px;
+}
+
+.div-block-mining {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-slider-container {
+  position: relative;
+  width: 755px;
+  overflow: hidden;
+}
+
+.image-slider {
+  display: flex;
+  transition: transform 0.5s linear;
 }
 
 .div-block-19 {
@@ -806,20 +870,31 @@ root {
   height: 180px;
 }
 
+.light-bg {
+  position: absolute;
+  z-index: 99;
+  top: -252px;
+  left: -448px;
+}
+
+.video-2 {
+  width: 1920px;
+}
+
 .div-block-49 {
   background-color: #0e1218;
-  border: 6px solid rgba(255, 255, 255, 0.4);
+  /* border: 6px solid rgba(255, 255, 255, 0.4); */
   border-radius: 24px;
   justify-content: space-between;
   align-items: stretch;
-  height: 586px;
+  height: 580px;
   margin-top: 40px;
   padding-left: 40px;
   padding-right: 40px;
   display: flex;
-  box-shadow: 15px -15px 24px #f79218, 5px -5px 10px #f79218, 5px -5px 10px rgba(255, 255, 255, 0.8),
+  /* box-shadow: 15px -15px 24px #f79218, 5px -5px 10px #f79218, 5px -5px 10px rgba(255, 255, 255, 0.8),
     50px -50px 60px rgba(247, 146, 24, 0.2), -15px 15px 24px #56eeff, -5px 5px 10px #3ff7f1, 5px 5px 10px rgba(255, 255, 255, 0.8),
-    -50px 50px 50px rgba(66, 225, 237, 0.3);
+    -50px 50px 50px rgba(66, 225, 237, 0.3); */
 }
 
 .div-block-50 {
@@ -1177,7 +1252,6 @@ root {
   }
 
   .div-block-9 {
-    width: auto;
     padding-bottom: 100px;
   }
 
@@ -1190,6 +1264,50 @@ root {
 
   .div-block-10 {
     padding: 12px;
+  }
+
+  .wallet-new-dialog-content {
+    width: calc(100vw - 20px);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .wallet-new-dialog-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .wallet-new-dialog-subtitle {
+    margin-top: 12px;
+    font-size: 16px;
+    line-height: 18px;
+  }
+
+  .wallet-new-dialog-phrase {
+    margin-top: 24px;
+    gap: 12px 12px;
+  }
+
+  .wallet-new-dialog-phrase-item {
+    width: 80px;
+    height: 36px;
+    border-radius: 6px;
+  }
+
+  .wallet-new-dialog-btns {
+    margin-top: 24px;
+  }
+
+  .add-dialog-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 24px;
+    height: 36px;
+    width: 160px;
+    font-family: Inter Tight, sans-serif;
   }
 
   .text-block-6,
@@ -1268,6 +1386,16 @@ root {
   .text-block-11 {
     font-size: 14px;
     line-height: 20px;
+  }
+
+  .div-block-mining {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .image-slider-container {
+    width: 130px;
   }
 
   .div-block-19 {
@@ -1532,12 +1660,23 @@ root {
     height: 96px;
   }
 
+  .light-bg {
+    top: -83px;
+    left: -151px;
+  }
+
+  .video-2 {
+    width: 635px;
+  }
+
   .div-block-49 {
     justify-content: center;
+    width: 335px;
     height: 192px;
+    border-radius: 12px;
     margin-top: 20px;
-    box-shadow: 5px -5px 10px #f79218, 5px -5px 10px #f79218, 5px -5px 10px rgba(255, 255, 255, 0.8), 5px -5px 10px rgba(247, 146, 24, 0.2),
-      -5px 5px 10px #56eeff, -5px 5px 10px #3ff7f1, 5px 5px 10px rgba(255, 255, 255, 0.8), -5px 5px 10px rgba(66, 225, 237, 0.3);
+    /* box-shadow: 5px -5px 10px #f79218, 5px -5px 10px #f79218, 5px -5px 10px rgba(255, 255, 255, 0.8), 5px -5px 10px rgba(247, 146, 24, 0.2),
+      -5px 5px 10px #56eeff, -5px 5px 10px #3ff7f1, 5px 5px 10px rgba(255, 255, 255, 0.8), -5px 5px 10px rgba(66, 225, 237, 0.3); */
   }
 
   .div-block-50 {
@@ -1554,6 +1693,7 @@ root {
   }
 
   .div-block-54 {
+    margin-top: 95px;
     flex-flow: column;
     align-items: stretch;
     padding: 20px 0;
@@ -1746,31 +1886,4 @@ root {
 
 a {
   text-decoration: none;
-}
-
-.image-slider-container {
-  position: relative;
-  width: 755px;
-  overflow: hidden;
-}
-
-.image-slider {
-  display: flex;
-  transition: transform 0.5s linear;
-}
-
-.wallet-new-dialog {
-  font-family: Nb Architekt Webfont, sans-serif;
-}
-
-.add-dialog-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  font-size: 16px;
-  line-height: 24px;
-  height: 48px;
-  width: 210px;
-  font-family: Inter Tight, sans-serif;
 }
