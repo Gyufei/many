@@ -4,14 +4,12 @@ import Highcharts, { Options } from 'highcharts';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 import { Web3Context } from './web3-context';
-import { useMediaQuery } from './hook/use-media-query';
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts);
 }
 
 export default function RateChart(props: any) {
-  const isDesktop = useMediaQuery('(min-width: 380px)');
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
   const { hashRate } = useContext(Web3Context);
@@ -28,7 +26,6 @@ export default function RateChart(props: any) {
       chart: {
         backgroundColor: '#050303',
         type: 'line',
-        height: isDesktop ? 585 : 199,
       },
       title: undefined,
       exporting: {
@@ -54,8 +51,10 @@ export default function RateChart(props: any) {
         },
         labels: {
           style: {
-            color: '#99A0AF',
-            fontSize: '12px',
+            color: 'rgba(255, 255, 255, 0.5)',
+            fontSize: '20px',
+            lineHeight: '30px',
+            fontFamily: 'Nb Architekt Webfont, sans-serif',
           },
         },
         crosshair: {
@@ -71,7 +70,8 @@ export default function RateChart(props: any) {
         title: undefined,
         lineWidth: 1,
         lineColor: '#2C2B2B',
-        min: 0,
+        min: -1,
+        max: 100,
         gridLineWidth: 0,
         tickWidth: 0,
         tickLength: 0,
@@ -134,8 +134,32 @@ export default function RateChart(props: any) {
           '<div style="color: rgba(255, 255, 255, 0.5);font-size: 12px;line-height: 24px;margin-top: 6px">{point.x:%H:%M, %b %e}</div>', // 设置tooltip格式，包括时
         footerFormat: '',
       },
+      responsive: {
+        rules: [
+          {
+            condition: {
+              maxWidth: 479,
+            },
+            chartOptions: {
+              chart: {
+                height: 200,
+              },
+            },
+          },
+          {
+            condition: {
+              minWidth: 480,
+            },
+            chartOptions: {
+              chart: {
+                height: 568,
+              },
+            },
+          },
+        ],
+      },
     }),
-    [isDesktop]
+    []
   );
 
   return <HighchartsReact highcharts={Highcharts} options={options} ref={chartComponentRef} {...props} />;

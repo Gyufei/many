@@ -3,7 +3,7 @@ import { Web3Context } from '../web3-context';
 import { utils } from 'ethers';
 
 export function useBalanceDisplay() {
-  const { currentChainInfo, currentWalletInfo, getProvider, getWallet } = useContext(Web3Context);
+  const { currentChainInfo, currentWalletInfo, provider, wallet } = useContext(Web3Context);
 
   const address = currentWalletInfo?.address || '';
 
@@ -13,8 +13,6 @@ export function useBalanceDisplay() {
   async function getBalance(acc: string) {
     if (!address) return;
 
-    const provider = getProvider();
-    const wallet = getWallet();
     const balanceData = await provider.getBalance(acc);
     const balance = utils.formatEther(balanceData);
     setBalance(Number(balance));
@@ -26,7 +24,7 @@ export function useBalanceDisplay() {
 
   useEffect(() => {
     getBalance(address);
-  }, [address, getProvider, getWallet]);
+  }, [address, provider, wallet]);
 
   return {
     balance,

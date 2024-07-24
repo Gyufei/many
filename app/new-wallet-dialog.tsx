@@ -6,6 +6,7 @@ export default function NewWalletDialog() {
   const { addWallet, currentWalletInfo } = useContext(Web3Context);
   const [visible, setVisible] = useState(false);
 
+  const [isHover, setIsHover] = useState(false);
   const [newWallet, setNewWallet] = useState<Wallet | null>(null);
 
   const phraseArray = useMemo(() => {
@@ -153,9 +154,30 @@ export default function NewWalletDialog() {
           </div>
         </div>
       </div>
-      <div className="div-block-11" style={{ cursor: 'pointer' }} onClick={handleShow}>
-        <div className="text-block-7">New</div>
-        <img src="images/添加.svg" loading="lazy" alt="" className="image-8" />
+      <div
+        className="div-block-11"
+        style={{ cursor: 'pointer' }}
+        onClick={handleShow}
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
+      >
+        <div
+          className="text-block-7"
+          style={{
+            color: isHover ? '#111' : 'rgba(17, 17, 17, 0.5)',
+          }}
+        >
+          New
+        </div>
+        <img
+          style={{
+            opacity: isHover ? '1' : '0.5',
+          }}
+          src="images/添加.svg"
+          loading="lazy"
+          alt=""
+          className="image-8"
+        />
       </div>
     </>
   );

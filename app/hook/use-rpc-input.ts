@@ -28,6 +28,7 @@ export function useRpcInput(currChainId: number) {
   }
 
   async function testRpc() {
+    console.log('test');
     try {
       if (!currChainId) return false;
 

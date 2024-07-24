@@ -3,10 +3,17 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Web3Context } from './web3-context';
 import { utils } from 'ethers';
-const { formatDistanceToNow } = require('date-fns');
+import { formatDistanceToNow } from 'date-fns';
+
+let querying = false;
+let lastQueryBlock = 0;
+let QueryTimeout: number;
+let ClearInter: number;
+let currentChainGlobal = 5003;
+let prevChain = 5003;
 
 export default function Section3() {
-  const { currentChainInfo, currentWalletInfo, getProvider, getWallet, getReadContract } = useContext(Web3Context);
+  const { currentChainInfo, currentWalletInfo, provider, readContract: contract } = useContext(Web3Context);
 
   const address = currentChainInfo?.contractAddress || '';
 
@@ -17,9 +24,9 @@ export default function Section3() {
   const displayLogs = useMemo(() => {
     if (currentTab === 'mine') {
       const mineLogs = logs.filter((log) => log.sender === currentWalletInfo?.address);
-      return mineLogs;
+      return mineLogs.slice(0, 8);
     }
-    return logs;
+    return logs.slice(0, 8);
   }, [currentWalletInfo, currentTab, logs]);
 
   function handleMineClick() {
@@ -30,53 +37,54 @@ export default function Section3() {
     setCurrentTab('global');
   }
 
-  const [lastQueryBlock, setLastQueryBlock] = useState<number>(0);
-
-  function queryLogs(fromBlock: number, toBlock: number) {
-    const provider = getProvider();
-    const contract = getReadContract();
+  async function queryAction(fromBlock: number, toBlock: number) {
+    let startBlock = toBlock - 1001;
     const filter = contract.filters['Mine']();
-
-    const batchLimit = 3000;
-
-    // 计算查询次数
-    const numQueries = Math.ceil((toBlock - fromBlock + 1) / batchLimit);
-
-    // 创建一个数组来存储每次查询的 Promise
-    const queryPromises = [];
-
-    for (let i = 0; i < numQueries; i++) {
-      const startBlock = fromBlock + i * batchLimit;
-      const endBlock = Math.min(fromBlock + (i + 1) * batchLimit - 1, toBlock);
-
-      // 创建一个 Promise 用于查询指定区块范围的日志
-      const promise = new Promise(async (resolve, reject) => {
-        try {
-          const events = await contract.queryFilter(filter, startBlock, endBlock);
-          const parsedLogs = await parsedLogAction(events);
-          resolve(parsedLogs);
-        } catch (error) {
-          reject(error);
-        }
-      });
-
-      queryPromises.push(promise);
+    const events = await contract.queryFilter(filter, fromBlock, toBlock);
+    if (events.length === 0) {
+      return [];
+    } else {
+      const parsedLogs = await parsedLogAction(events);
+      return parsedLogs;
     }
-
-    return Promise.all(queryPromises)
-      .then((results) => results.flat())
-      .catch((error) => {
-        console.error('Error querying logs:', error);
-        throw error;
-      });
   }
 
-  async function parsedLogAction(logs: any[]) {
-    const provider = getProvider();
-    const contract = getReadContract();
+  async function startQuery() {
+    const beginBlock = currentChainInfo.addressBlock;
+    const endBlock = await provider.getBlockNumber();
+    lastQueryBlock = endBlock;
 
+    let fromBlock = endBlock - 1001;
+    let toBlock = endBlock;
+
+    async function query(fB: number, tB: number) {
+      console.log('query', fB, tB);
+      const lgs = await queryAction(fB, tB);
+      setLogs([...lgs, ...logs]);
+      const mineLogs = [...lgs, ...logs].filter((log) => log.sender === currentWalletInfo?.address);
+
+      if (mineLogs.length > 8 || fromBlock <= beginBlock) {
+        return null;
+      } else {
+        QueryTimeout = setTimeout(async () => {
+          if (currentChainGlobal !== prevChain) {
+            clearTimeout(QueryTimeout);
+            return;
+          }
+          toBlock = fromBlock - 1;
+          fromBlock = fromBlock - 1000;
+          query(fromBlock, toBlock);
+        }, 500) as any;
+        console.log(QueryTimeout);
+      }
+    }
+
+    await query(fromBlock, toBlock);
+  }
+
+  async function parsedLogAction(lgs: any[]) {
     const parsedLogs = await Promise.all(
-      logs.map(async (log: any) => {
+      lgs.map(async (log: any) => {
         const block = await provider.getBlock(log.blockNumber);
         const timestamp = block!.timestamp;
 
@@ -93,74 +101,52 @@ export default function Section3() {
     return parsedLogs;
   }
 
-  async function queryLogsRecursive(fromBlock: number, toBlock: number, logs: any[]) {
-    const provider = getProvider();
-    const batchLimit = 3000;
+  async function updateQuery() {
+    const beginBlock = lastQueryBlock;
+    const endBlock = await provider.getBlockNumber();
+    if (beginBlock >= endBlock) return;
+    lastQueryBlock = endBlock;
 
-    const nowLogs = await queryLogs(fromBlock, toBlock);
-    logs = logs.concat(nowLogs);
-    if (nowLogs.length) {
-      setLogs(logs);
-    }
+    ClearInter = setInterval(() => {
+      queryAction(beginBlock, endBlock).then((lgs) => {
+        if (lgs.length) {
+          setLogs([...lgs, ...logs]);
+        }
+      });
+    }, 10000) as any;
 
-    const mineLogs = logs.filter((log) => log.sender === currentWalletInfo?.address);
-    const remainingBlocks = fromBlock - batchLimit;
-
-    if (remainingBlocks <= currentChainInfo.addressBlock || mineLogs.length > 8) {
-      return logs;
-    }
-
-    return queryLogsRecursive(remainingBlocks, fromBlock - 1, logs); // 递归调用进行下一次查询
+    return ClearInter;
   }
 
-  async function updateLogs(initLastBlock: number) {
-    const provider = getProvider();
-    const contract = getReadContract();
+  async function initQuery() {
+    if (querying) return;
+    querying = true;
+    currentChainGlobal = currentChainInfo.id;
+    prevChain = currentChainInfo.id;
 
-    contract.on('Mine', async (minedHash, user, rewardRate) => {
-      const timestamp = new Date().getTime();
-      const blockNumber = await provider.getBlockNumber();
-
-      const log = {
-        time: timestamp * 1000,
-        blockNumber: blockNumber,
-        minedHash: minedHash,
-        sender: user,
-        rewardRate: rewardRate,
-      };
-
-      setLogs([...logs, log]);
-    });
+    await startQuery();
+    await updateQuery();
   }
 
   useEffect(() => {
-    async function initGet() {
-      const provider = getProvider();
-      const lastBlock = await provider.getBlockNumber();
-      setLastQueryBlock(lastBlock);
+    currentChainGlobal = currentChainInfo.id;
+    clearTimeout(QueryTimeout);
+    clearInterval(ClearInter);
+    setLogs([]);
+    querying = false;
+    lastQueryBlock = 0;
+    QueryTimeout = 0;
+    ClearInter = 0;
 
-      const logs: any[] = [];
-      await queryLogsRecursive(lastBlock - 1001, lastBlock, logs);
-
-      return lastBlock;
-    }
-
-    let timer = 0;
-    initGet().then((lastBlock) => {
-      timer = setInterval(() => {
-        updateLogs(lastBlock);
-      }, 10000) as any;
-    });
-
-    return () => clearInterval(timer);
-  }, []);
+    initQuery();
+  }, [currentChainInfo.id]);
 
   function displayHash(hash: string) {
     return hash.slice(0, 10) + '...' + hash.slice(-8);
   }
 
   return (
-    <section className="section-3">
+    <section key={currentChainInfo.id} className="section-3">
       <div className="div-block-23">
         <div className="div-block-64">
           <div className="text-block-13">Activities</div>

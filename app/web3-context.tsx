@@ -20,10 +20,10 @@ interface IWeb3Context {
   wallets: IWallet[];
   addWallet: (wallet: IWallet) => void;
 
-  getProvider: () => providers.JsonRpcProvider;
-  getWallet: () => Wallet | null;
-  getReadContract: () => Contract;
-  getContract: () => Contract;
+  provider: providers.JsonRpcProvider;
+  wallet: Wallet | null;
+  readContract: Contract;
+  contract: Contract;
 
   hashRate: string;
   setHashRate: (value: string) => void;
@@ -41,32 +41,29 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
 
   const [hashRate, setHashRate] = useState('');
 
-  const getProvider = useCallback(() => {
+  const provider = useMemo(() => {
     const provider = new providers.JsonRpcProvider(currentRpc);
     return provider;
   }, [currentRpc]);
 
-  const getWallet = useCallback(() => {
+  const wallet = useMemo(() => {
     if (!currentWalletInfo) return null;
 
-    const provider = getProvider();
     const wallet = new Wallet(currentWalletInfo.privateKey, provider);
     return wallet;
-  }, [currentWalletInfo, getProvider]);
+  }, [currentWalletInfo, provider]);
 
-  const getReadContract = useCallback(() => {
-    const provider = getProvider();
+  const readContract = useMemo(() => {
     const contract = new Contract(currentChainInfo.contractAddress, ABI, provider!);
 
     return contract;
-  }, [currentChainInfo, getProvider]);
+  }, [currentChainInfo, provider]);
 
-  const getContract = useCallback(() => {
-    const wallet = getWallet();
+  const contract = useMemo(() => {
     const contract = new Contract(currentChainInfo.contractAddress, ABI, wallet!);
 
     return contract;
-  }, [currentChainInfo, getWallet]);
+  }, [currentChainInfo, wallet]);
 
   return (
     // 使用上下文提供者包装子组件
@@ -86,10 +83,10 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
           addWallet,
           walletsMap,
 
-          getProvider,
-          getWallet,
-          getReadContract,
-          getContract,
+          provider,
+          wallet,
+          readContract,
+          contract,
 
           hashRate,
           setHashRate,

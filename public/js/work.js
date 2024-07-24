@@ -51,7 +51,6 @@ self.addEventListener('message', (event) => {
         computedHash,
         saltHex,
         signature,
-        hashRate
       },
     }));
 

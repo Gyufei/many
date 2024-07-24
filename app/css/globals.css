@@ -141,6 +141,7 @@ root {
   left: auto;
   right: 0%;
   box-shadow: inset 0 0 10px #ff5d06, 0 0 30px #f09623;
+  z-index: 1;
 }
 
 .image-4 {
@@ -745,8 +746,9 @@ root {
 
 .div-block-41 {
   background-image: url('/images/image3x-1.png'), url('/images/image3x.png');
-  background-position: 0 100%, 0 0;
-  background-size: cover, cover;
+  background-position: -15px -6px, 0 0;
+  background-size: 110% 106%, cover;
+  background-repeat: no-repeat;
   border-radius: 24px;
   align-items: flex-end;
   width: 632px;
@@ -955,6 +957,7 @@ root {
   padding: 40px 100px;
   display: flex;
   position: relative;
+  z-Index: 101
 }
 
 .image-16 {
@@ -1891,14 +1894,14 @@ a {
 .border-button-light {
   border-radius: 9999px;
   border-width: 1px;
-  border-color: transparent
+  border-color: transparent;
 }
 
 .border-button-light:before {
   content: var(--tw-content);
   position: absolute;
-  left: -.125rem;
-  top: -.125rem;
+  left: -0.125rem;
+  top: -0.125rem;
   z-index: 30;
   box-sizing: content-box;
   height: 100%;
@@ -1907,36 +1910,41 @@ a {
   border-width: 2px;
   border-color: transparent;
   --tw-blur: blur(7px);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-  background: linear-gradient(transparent,transparent) padding-box,linear-gradient(91.96deg,rgba(255,177,153,0) 6.11%,rgba(255,177,153,.2) 53.57%,#ff7950 93.6%) border-box
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert)
+    var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+  background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(91.96deg, rgba(255, 177, 153, 0) 6.11%, rgba(255, 177, 153, 0.2) 53.57%, #ff7950 93.6%) border-box;
 }
 
 .border-button-light {
-  background: linear-gradient(transparent,transparent) padding-box,linear-gradient(103.7deg,hsla(15,25%,65%,.1) 38.66%,rgba(233,132,99,.1) 68.55%,#e98463 85.01%,#fff 92.12%) border-box
+  background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(103.7deg, hsla(15, 25%, 65%, 0.1) 38.66%, rgba(233, 132, 99, 0.1) 68.55%, #e98463 85.01%, #fff 92.12%) border-box;
 }
 
 .border-button-light-blur {
   position: relative;
   border-radius: 9999px;
   border-width: 3px;
-  border-color: transparent
+  border-color: transparent;
 }
 
 :root {
   --tw-content: '';
 }
 
-.border-button-light-blur:after,.border-button-light-blur:before {
+.border-button-light-blur:after,
+.border-button-light-blur:before {
   content: var(--tw-content);
-  position: absolute
+  position: absolute;
 }
 
-.border-button-light-blur:after,.border-button-light-blur:before {
+.border-button-light-blur:after,
+.border-button-light-blur:before {
   box-sizing: content-box;
   height: 100%;
   width: 100%;
   border-radius: 9999px;
-  border-color: transparent
+  border-color: transparent;
 }
 
 .border-button-light-blur:after {
@@ -1945,18 +1953,22 @@ a {
   z-index: 20;
   border-width: 3px;
   --tw-blur: blur(15px);
-  background: linear-gradient(transparent,transparent) padding-box,linear-gradient(91.88deg,rgba(255,137,100,.2) 46.45%,#cd3100 98.59%) border-box
+  background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(91.88deg, rgba(255, 137, 100, 0.2) 46.45%, #cd3100 98.59%) border-box;
 }
 
-.border-button-light-blur:after,.border-button-light-blur:before {
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+.border-button-light-blur:after,
+.border-button-light-blur:before {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert)
+    var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .border-button-light-blur:before {
-  left: -.125rem;
-  top: -.125rem;
+  left: -0.125rem;
+  top: -0.125rem;
   z-index: 10;
   border-width: 2px;
   --tw-blur: blur(2px);
-  background: linear-gradient(transparent,transparent) padding-box,linear-gradient(97.68deg,rgba(255,177,153,0) 38.1%,rgba(255,177,153,.2) 82.47%,#ff7950 93.3%) border-box
+  background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(97.68deg, rgba(255, 177, 153, 0) 38.1%, rgba(255, 177, 153, 0.2) 82.47%, #ff7950 93.3%) border-box;
 }

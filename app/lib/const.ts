@@ -69,7 +69,7 @@ const MantleChain: IChainInfo = {
   },
   testnet: true,
   contractAddress: '0xeA6C1670AD3771ccf1cB86C4db5A9b8C8B50C53c',
-  addressBlock: 10000
+  addressBlock: 20706
 };
 
 export const Chains = [MantleChain, EthChain];

@@ -14,10 +14,10 @@ export default function StartMiningBtn() {
 
   return (
     <div onMouseMove={handleMouseMove} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="div-block-5 mt-80">
-      <div className="text-block-4" onClick={scrollToAnchor}>
+      <div className="text-block-4" style={{ zIndex: '10' }} onClick={scrollToAnchor}>
         START MINING
       </div>
-      <img src="images/箭头右_arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
+      <img src="images/箭头右_arrow-right.svg" style={{ zIndex: '10' }} loading="lazy" width="16" height="16" alt="" className="image-3" />
       <div
         style={{
           left: blockPosition ? `${blockPosition}px` : 'auto',

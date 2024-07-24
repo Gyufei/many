@@ -7,6 +7,10 @@ import BigNumber from 'bignumber.js';
 import { useRpcInput } from './hook/use-rpc-input';
 import { useBalanceDisplay } from './hook/use-balance-display';
 import NewWalletDialog from './new-wallet-dialog';
+import { CopyBtn } from './copy-btn';
+
+let CurrentHash: string = '';
+let InfoTimeout: number;
 
 export default function Section2() {
   const {
@@ -16,9 +20,9 @@ export default function Section2() {
     addWallet,
     setCurrentWallet,
     setCurrentChain,
-    getProvider,
-    getWallet,
-    getContract,
+    provider,
+    wallet,
+    contract,
     setHashRate,
   } = useContext(Web3Context);
 
@@ -36,6 +40,8 @@ export default function Section2() {
 
   const [mineTimeout, setMineTimeout] = useState<number>();
   const [isMining, setIsMining] = useState(false);
+
+  const [currentHash, setCurrentHash] = useState<string | null>(null);
 
   const workerRef = useRef<Worker>();
 
@@ -75,13 +81,12 @@ export default function Section2() {
   }
 
   async function getNonce() {
-    const provider = getProvider();
     const nonce = await provider.getTransactionCount(currentWalletInfo.address);
     return nonce;
   }
 
   async function register() {
-    const contractObj = getContract();
+    const contractObj = contract;
 
     const nonce = await getNonce();
 
@@ -102,14 +107,14 @@ export default function Section2() {
     console.log('register complete');
   }
 
-  async function getContractInfo() {
+  async function getContractInfo(prevHash: string) {
     return new Promise<{
       minedCurrentHash: string;
       minedLastMinedAt: number;
       difficultyHash: string;
       minBlockTimes: string;
     }>(async (resolve, reject) => {
-      const contractObj = getContract();
+      const contractObj = contract;
 
       const checkHash = async () => {
         const user_info = await contractObj.userInfoMap(address);
@@ -119,28 +124,24 @@ export default function Section2() {
           await register();
         }
 
-        let minedCurrentHash = null;
-        let minedLastMinedAt = 0;
-
-        if (currentHash !== newCurrentHash) {
-          setCurrentHash(user_info.currentHash);
-          setLastMinedAt(user_info.lastMinedAt);
-
-          minedCurrentHash = user_info.currentHash;
-          minedLastMinedAt = user_info.lastMinedAt;
+        if (prevHash !== newCurrentHash) {
+          if (InfoTimeout) {
+            clearTimeout(InfoTimeout);
+          }
+          CurrentHash = user_info.currentHash;
 
           const treasuryInfo = await contractObj.treasuryInfo();
           const difficultyHash = treasuryInfo.difficultyHash;
           const minBlockTimes = treasuryInfo.minBlockTimes.toString();
 
           resolve({
-            minedCurrentHash,
-            minedLastMinedAt,
+            minedCurrentHash: user_info.currentHash,
+            minedLastMinedAt: user_info.lastMinedAt,
             difficultyHash,
             minBlockTimes,
           });
         } else {
-          setTimeout(checkHash, 1000);
+          InfoTimeout = setTimeout(checkHash, 1000) as any;
         }
       };
 
@@ -154,16 +155,13 @@ export default function Section2() {
   }
 
   async function mineAction(mined: { computedHash: string; saltHex: string; signature: string }) {
-    const contractObj = getContract();
+    const contractObj = contract;
     const gasLimit = await (contractObj.estimateGas as any)['mine'](mined.computedHash, mined.saltHex, mined.signature);
 
     await contractObj.mine(mined.computedHash, mined.saltHex, mined.signature, {
       gasLimit: gasLimit.toString(),
     });
   }
-
-  const [currentHash, setCurrentHash] = useState<string | null>(null);
-  const [lastMinedAt, setLastMinedAt] = useState<number>(0);
 
   async function mineStart() {
     if (!currentWalletInfo) {
@@ -198,7 +196,8 @@ export default function Section2() {
         }
       });
 
-      const { minedCurrentHash, minedLastMinedAt, difficultyHash, minBlockTimes } = await getContractInfo();
+      const prevHash = CurrentHash;
+      const { minedCurrentHash, minedLastMinedAt, difficultyHash, minBlockTimes } = await getContractInfo(CurrentHash);
 
       const now_at = new Date().getTime();
       const lMinedAt = Number(minedLastMinedAt) * 1000;
@@ -207,12 +206,14 @@ export default function Section2() {
       let timeout: number;
       if (now_at < lMinedAt + minBTimes) {
         timeout = setTimeout(() => {
+          CurrentHash = prevHash;
           mineStart();
         }, lMinedAt + minBTimes - now_at) as any;
         setMineTimeout(timeout);
         return;
       }
 
+      console.log('mine start', minedCurrentHash);
       workerRef.current?.postMessage(
         JSON.stringify({ type: 'start', payload: { address, currentHash: minedCurrentHash, difficultyHash } })
       );
@@ -271,14 +272,6 @@ export default function Section2() {
     slide();
   };
 
-  function handleCopy() {
-    if (!currentWalletInfo) {
-      return;
-    }
-
-    navigator.clipboard.writeText(currentWalletInfo.address);
-  }
-
   return (
     <section className="section-2" id="section2">
       <div className="div-block-9">
@@ -291,10 +284,7 @@ export default function Section2() {
                   <div className="text-block-6">Account</div>
                   <div className="div-block-12">
                     <NewWalletDialog />
-                    <div className="div-block-11" style={{ cursor: 'pointer' }} onClick={handleCopy}>
-                      <div className="text-block-7">COPY</div>
-                      <img src="images/copy.svg" loading="lazy" alt="" className="image-9" />
-                    </div>
+                    <CopyBtn address={address} />
                   </div>
                 </div>
               </div>
@@ -302,6 +292,7 @@ export default function Section2() {
                 className="div-block-14"
                 style={{
                   position: 'relative',
+                  boxShadow: showWalletSelect ? 'inset 0 -2px #111' : 'inset 0 -2px #d3d4d6',
                 }}
                 onClick={() => handleToSelectWallet()}
               >
@@ -380,7 +371,12 @@ export default function Section2() {
             <div>
               <div className="text-block-6">network</div>
               <div data-hover="false" data-delay="0" className="dropdown w-dropdown" onClick={() => handleToSelectNet()}>
-                <div className="dropdown-toggle w-dropdown-toggle">
+                <div
+                  className="dropdown-toggle w-dropdown-toggle"
+                  style={{
+                    boxShadow: showNetSelect ? 'inset 0 -2px #111' : 'inset 0 -2px #d3d4d6',
+                  }}
+                >
                   <div className="div-block-63">
                     <img width="32" height="32" alt="" src={currentChainInfo.logo} loading="lazy" className="image-11" id="chainLogo" />
                     <div className="text-block-46" id="chainName">
