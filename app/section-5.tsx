@@ -22,15 +22,23 @@ export default function Section5() {
             position: 'relative',
           }}
         >
-          <div className="div-block-48 color-shadow">
-            <img
-              src="images/14x.png"
-              loading="lazy"
-              sizes="(max-width: 479px) 96px, 180px"
-              srcSet="images/14x-p-500.png 500w, images/14x.png 720w"
-              alt=""
-              className="image-14"
-            />
+          <div style={{ position: 'relative', borderRadius: '20px', zIndex: 100, overflow: 'hidden', padding: '2px 2px' }}>
+            <div className="small-light-bg">
+              <video className="video-3" style={{}} playsInline muted loop autoPlay src="images/small-light.mp4"></video>
+            </div>
+            <div className="div-block-48 color-shadow">
+              <img
+                src="images/14x.png"
+                loading="lazy"
+                sizes="(max-width: 479px) 96px, 180px"
+                srcSet="images/14x-p-500.png 500w, images/14x.png 720w"
+                alt=""
+                style={{
+                  zIndex: 101,
+                }}
+                className="image-14"
+              />
+            </div>
           </div>
           <div className="div-block-48">
             <img
