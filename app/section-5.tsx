@@ -113,8 +113,14 @@ export default function Section5() {
             <div className="text-block-36">holders</div>
             <div className="text-block-37">500K</div>
           </div>
-          <div className="div-block-55"></div>
-          <div className="div-block-55 top-circle"></div>
+          <div className="div-block-55">
+            <div className="radius-block-1"></div>
+            <div className="radius-block-2"></div>
+          </div>
+          <div className="div-block-55 top-circle">
+            <div className="radius-block-1"></div>
+            <div className="radius-block-2"></div>
+          </div>
         </div>
       </div>
     </section>
