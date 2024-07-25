@@ -32,15 +32,6 @@ export default function Section1() {
           <div className="image-6">
             <RateChart />
           </div>
-          {/* <img
-            src="images/折线图4x.png"
-            loading="lazy"
-            sizes="(max-width: 479px) 83vw, 100vw"
-            height="594"
-            alt=""
-            srcSet="images/折线图4x-p-500.png 500w, images/折线图4x-p-800.png 800w, images/折线图4x-p-1080.png 1080w, images/折线图4x-p-1600.png 1600w, images/折线图4x-p-2000.png 2000w, images/折线图4x-p-2600.png 2600w, images/折线图4x-p-3200.png 3200w, images/折线图4x.png 4096w"
-            className="image-6"
-          /> */}
         </div>
       </div>
       <div className="div-block-8">
