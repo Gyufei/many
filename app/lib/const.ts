@@ -44,7 +44,7 @@ const EthChain: IChainInfo = {
   },
   testnet: true,
   contractAddress: '0x593e5aDffb7755213Ecd366bD563D8a52D0C0f32',
-  addressBlock: 9827607
+  addressBlock: 20706
 };
 
 // Mantle Sepolia
@@ -69,7 +69,7 @@ const MantleChain: IChainInfo = {
   },
   testnet: true,
   contractAddress: '0xeA6C1670AD3771ccf1cB86C4db5A9b8C8B50C53c',
-  addressBlock: 20706
+  addressBlock: 9827607
 };
 
 export const Chains = [MantleChain, EthChain];

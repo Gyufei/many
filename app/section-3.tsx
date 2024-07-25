@@ -5,12 +5,8 @@ import { Web3Context } from './web3-context';
 import { utils } from 'ethers';
 import { formatDistanceToNow } from 'date-fns';
 
-let querying = false;
 let lastQueryBlock = 0;
-let QueryTimeout: number;
 let ClearInter: number;
-let currentChainGlobal = 5003;
-let prevChain = 5003;
 
 export default function Section3() {
   const { currentChainInfo, currentWalletInfo, provider, readContract: contract } = useContext(Web3Context);
@@ -20,6 +16,8 @@ export default function Section3() {
   const [currentTab, setCurrentTab] = useState<'mine' | 'global'>('mine');
 
   const [logs, setLogs] = useState<any[]>([]);
+
+  const [stopPrevQueryCb, setStopPrevQueryCb] = useState<any>();
 
   const displayLogs = useMemo(() => {
     if (currentTab === 'mine') {
@@ -37,6 +35,70 @@ export default function Section3() {
     setCurrentTab('global');
   }
 
+  async function startQuery() {
+    console.log('start query', stopPrevQueryCb);
+    stopPrevQueryCb && stopPrevQueryCb();
+
+    const beginBlock = currentChainInfo.addressBlock;
+    const endBlock = await provider.getBlockNumber();
+    lastQueryBlock = endBlock;
+
+    const queryBlockArr = getQueryBlockArr(beginBlock, endBlock);
+
+    if (!queryBlockArr.length) {
+      return;
+    }
+
+    let runFlag = true;
+
+    async function query() {
+      for (const { from, to } of queryBlockArr) {
+        console.log(from, to, 'query', runFlag);
+        if (!runFlag) {
+          return;
+        }
+
+        const lgs = await queryAction(from, to);
+
+        console.log(lgs, 'lgs');
+        setLogs([...lgs, ...logs]);
+        const mineLogs = [...lgs, ...logs].filter((log) => log.sender === currentWalletInfo?.address);
+
+        if (mineLogs.length > 8) {
+          updateQuery();
+          return;
+        }
+      }
+
+      updateQuery();
+    }
+
+    query();
+
+    setStopPrevQueryCb(() => {
+      return () => {
+        runFlag = false;
+      };
+    });
+  }
+
+  function getQueryBlockArr(startBlock: number, endBlock: number) {
+    const blockSize = 3000;
+    const arr = [];
+    let fromBlock = endBlock - blockSize - 1;
+    let toBlock = endBlock;
+
+    arr.push({ from: fromBlock, to: toBlock });
+
+    while (fromBlock > startBlock) {
+      toBlock = fromBlock - 1;
+      fromBlock = fromBlock - blockSize - 1;
+      arr.push({ from: fromBlock, to: toBlock });
+    }
+
+    return arr;
+  }
+
   async function queryAction(fromBlock: number, toBlock: number) {
     let startBlock = toBlock - 1001;
     const filter = contract.filters['Mine']();
@@ -47,39 +109,6 @@ export default function Section3() {
       const parsedLogs = await parsedLogAction(events);
       return parsedLogs;
     }
-  }
-
-  async function startQuery() {
-    const beginBlock = currentChainInfo.addressBlock;
-    const endBlock = await provider.getBlockNumber();
-    lastQueryBlock = endBlock;
-
-    let fromBlock = endBlock - 1001;
-    let toBlock = endBlock;
-
-    async function query(fB: number, tB: number) {
-      console.log('query', fB, tB);
-      const lgs = await queryAction(fB, tB);
-      setLogs([...lgs, ...logs]);
-      const mineLogs = [...lgs, ...logs].filter((log) => log.sender === currentWalletInfo?.address);
-
-      if (mineLogs.length > 8 || fromBlock <= beginBlock) {
-        return null;
-      } else {
-        QueryTimeout = setTimeout(async () => {
-          if (currentChainGlobal !== prevChain) {
-            clearTimeout(QueryTimeout);
-            return;
-          }
-          toBlock = fromBlock - 1;
-          fromBlock = fromBlock - 1000;
-          query(fromBlock, toBlock);
-        }, 500) as any;
-        console.log(QueryTimeout);
-      }
-    }
-
-    await query(fromBlock, toBlock);
   }
 
   async function parsedLogAction(lgs: any[]) {
@@ -102,6 +131,7 @@ export default function Section3() {
   }
 
   async function updateQuery() {
+    clearInterval(ClearInter);
     const beginBlock = lastQueryBlock;
     const endBlock = await provider.getBlockNumber();
     if (beginBlock >= endBlock) return;
@@ -118,27 +148,10 @@ export default function Section3() {
     return ClearInter;
   }
 
-  async function initQuery() {
-    if (querying) return;
-    querying = true;
-    currentChainGlobal = currentChainInfo.id;
-    prevChain = currentChainInfo.id;
-
-    await startQuery();
-    await updateQuery();
-  }
-
   useEffect(() => {
-    currentChainGlobal = currentChainInfo.id;
-    clearTimeout(QueryTimeout);
-    clearInterval(ClearInter);
-    setLogs([]);
-    querying = false;
     lastQueryBlock = 0;
-    QueryTimeout = 0;
-    ClearInter = 0;
-
-    initQuery();
+    setLogs([]);
+    startQuery();
   }, [currentChainInfo.id]);
 
   function displayHash(hash: string) {
@@ -146,7 +159,7 @@ export default function Section3() {
   }
 
   return (
-    <section key={currentChainInfo.id} className="section-3">
+    <section className="section-3">
       <div className="div-block-23">
         <div className="div-block-64">
           <div className="text-block-13">Activities</div>
