@@ -5,9 +5,6 @@ import { Web3Context } from './web3-context';
 import { utils } from 'ethers';
 import { formatDistanceToNow } from 'date-fns';
 
-let lastQueryBlock = 0;
-let ClearInter: number;
-
 export default function Section3() {
   const { currentChainInfo, currentWalletInfo, provider, readContract: contract } = useContext(Web3Context);
 
@@ -17,7 +14,7 @@ export default function Section3() {
 
   const [logs, setLogs] = useState<any[]>([]);
 
-  const [stopPrevQueryCb, setStopPrevQueryCb] = useState<any>();
+  const [updateTimerId, setUpdateTimerId] = useState<number>();
 
   const displayLogs = useMemo(() => {
     if (currentTab === 'mine') {
@@ -36,12 +33,12 @@ export default function Section3() {
   }
 
   async function startQuery() {
-    console.log('start query', stopPrevQueryCb);
-    stopPrevQueryCb && stopPrevQueryCb();
+    if (updateTimerId) {
+      clearTimeout(updateTimerId);
+    }
 
     const beginBlock = currentChainInfo.addressBlock;
     const endBlock = await provider.getBlockNumber();
-    lastQueryBlock = endBlock;
 
     const queryBlockArr = getQueryBlockArr(beginBlock, endBlock);
 
@@ -49,37 +46,12 @@ export default function Section3() {
       return;
     }
 
-    let runFlag = true;
+    const promiseArr = queryBlockArr.map((queryBlock) => queryAction(queryBlock.from, queryBlock.to));
+    const res = await Promise.all(promiseArr);
+    const lgs = res.flat();
+    setLogs([...lgs, ...logs]);
 
-    async function query() {
-      for (const { from, to } of queryBlockArr) {
-        console.log(from, to, 'query', runFlag);
-        if (!runFlag) {
-          return;
-        }
-
-        const lgs = await queryAction(from, to);
-
-        console.log(lgs, 'lgs');
-        setLogs([...lgs, ...logs]);
-        const mineLogs = [...lgs, ...logs].filter((log) => log.sender === currentWalletInfo?.address);
-
-        if (mineLogs.length > 8) {
-          updateQuery();
-          return;
-        }
-      }
-
-      updateQuery();
-    }
-
-    query();
-
-    setStopPrevQueryCb(() => {
-      return () => {
-        runFlag = false;
-      };
-    });
+    updateQuery(endBlock);
   }
 
   function getQueryBlockArr(startBlock: number, endBlock: number) {
@@ -130,26 +102,23 @@ export default function Section3() {
     return parsedLogs;
   }
 
-  async function updateQuery() {
-    clearInterval(ClearInter);
-    const beginBlock = lastQueryBlock;
+  async function updateQuery(lastEndBlock: number) {
     const endBlock = await provider.getBlockNumber();
-    if (beginBlock >= endBlock) return;
-    lastQueryBlock = endBlock;
+    if (lastEndBlock >= endBlock) return;
 
-    ClearInter = setInterval(() => {
-      queryAction(beginBlock, endBlock).then((lgs) => {
-        if (lgs.length) {
-          setLogs([...lgs, ...logs]);
-        }
-      });
-    }, 10000) as any;
+    const lgs = await queryAction(lastEndBlock, endBlock);
+    if (lgs.length) {
+      setLogs([...lgs, ...logs]);
+    }
 
-    return ClearInter;
+    const id = setTimeout(() => {
+      updateQuery(endBlock);
+    }, 10000);
+
+    setUpdateTimerId(id as any);
   }
 
   useEffect(() => {
-    lastQueryBlock = 0;
     setLogs([]);
     startQuery();
   }, [currentChainInfo.id]);
