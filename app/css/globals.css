@@ -932,12 +932,12 @@ root {
 .light-bg {
   position: absolute;
   z-index: 99;
-  top: -252px;
-  left: -448px;
+  top: -221px;
+  left: -470px;
 }
 
 .video-2 {
-  width: 1920px;
+  width: 1960px;
 }
 
 .div-block-49 {
@@ -948,6 +948,7 @@ root {
   justify-content: space-between;
   align-items: stretch;
   height: 580px;
+  width: 1024px;
   margin-top: 40px;
   padding-left: 40px;
   padding-right: 40px;
