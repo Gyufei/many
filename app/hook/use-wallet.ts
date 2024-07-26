@@ -9,10 +9,12 @@ const WalletsStorageKey = 'UserWallets';
 const CurrentWalletStorageKey = 'CurrentWallet';
 
 export function useWallet() {
-  const [wallets, setWallets] = useState<IWallet[]>([{
-    address: '0xb347921E0524d05362D77CbBc247fc9E2Ad5dc95',
-    privateKey: 'a37e30c516210751449d62e6a8a5c17ce6025bbdc5851192013f30e90ea8d8c8'
-  }]);
+  const [wallets, setWallets] = useState<IWallet[]>([
+    //   {
+    //   address: '0xb347921E0524d05362D77CbBc247fc9E2Ad5dc95',
+    //   privateKey: 'a37e30c516210751449d62e6a8a5c17ce6025bbdc5851192013f30e90ea8d8c8'
+    // }
+  ]);
   const [currentWallet, setCurrentWallet] = useState<string>();
 
   useEffect(() => {

@@ -17,9 +17,20 @@ export default function RateChart(props: any) {
   useEffect(() => {
     if (hashRate) {
       const x = new Date().getTime();
-      chartComponentRef.current?.chart?.series[0].addPoint([x, Number(hashRate)], true, true, true);
+      const series = chartComponentRef.current?.chart?.series[0];
+      series && series.addPoint([x, Number(hashRate)], true, true, true);
     }
+
+    const inter = setInterval(() => {
+      const x = new Date().getTime();
+      const series = chartComponentRef.current?.chart?.series[0];
+      series && series.addPoint([x, Number(hashRate)], true, true, true);
+    }, 60000);
+
+    return () => clearInterval(inter);
   }, [hashRate]);
+
+  const [data, setData] = React.useState<any[]>([]);
 
   const options = useMemo<Options>(
     () => ({
@@ -27,7 +38,16 @@ export default function RateChart(props: any) {
         backgroundColor: '#050303',
         type: 'line',
       },
-      title: undefined,
+      title: {
+        text: 'My hashrate', // 设置标题文本内容
+        style: {
+          color: '#F5F5F5',
+          fontFamily: 'var(--font-inter)',
+          fontSize: '28px',
+          lineHeight: '30px',
+        },
+        align: 'left',
+      },
       exporting: {
         enabled: false,
       },
@@ -36,7 +56,7 @@ export default function RateChart(props: any) {
       },
       xAxis: {
         type: 'datetime',
-        // tickInterval: 60000 * 7,
+        tickInterval: 60000 * 10,
         min: new Date().getTime() - 2400000,
         max: new Date().getTime() + 1200000,
         minPadding: 0,
@@ -52,9 +72,7 @@ export default function RateChart(props: any) {
         labels: {
           style: {
             color: 'rgba(255, 255, 255, 0.5)',
-            fontSize: '20px',
-            lineHeight: '30px',
-            fontFamily: 'Nb Architekt Webfont, sans-serif',
+            fontFamily: 'var(--font-inter)',
           },
         },
         crosshair: {
@@ -71,8 +89,9 @@ export default function RateChart(props: any) {
         lineWidth: 1,
         lineColor: '#2C2B2B',
         min: -1,
-        max: 100,
-        gridLineWidth: 0,
+        max: 1000,
+        gridLineWidth: 1,
+        gridLineColor: 'rgba(255, 255, 255, 0.2)',
         tickWidth: 0,
         tickLength: 0,
         tickPosition: 'inside',
@@ -144,6 +163,20 @@ export default function RateChart(props: any) {
               chart: {
                 height: 200,
               },
+              title: {
+                style: {
+                  fontSize: '14px',
+                  lineHeight: '20px',
+                },
+              },
+              xAxis: {
+                labels: {
+                  style: {
+                    fontSize: '12px',
+                    lineHeight: '20px',
+                  },
+                },
+              },
             },
           },
           {
@@ -152,7 +185,21 @@ export default function RateChart(props: any) {
             },
             chartOptions: {
               chart: {
-                height: 568,
+                height: 586,
+              },
+              title: {
+                style: {
+                  fontSize: '28px',
+                  lineHeight: '30px',
+                },
+              },
+              xAxis: {
+                labels: {
+                  style: {
+                    fontSize: '20px',
+                    lineHeight: '30px',
+                  },
+                },
               },
             },
           },

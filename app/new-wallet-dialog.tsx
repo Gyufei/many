@@ -9,6 +9,10 @@ export default function NewWalletDialog() {
   const [isHover, setIsHover] = useState(false);
   const [newWallet, setNewWallet] = useState<Wallet | null>(null);
 
+  const initNew = useMemo(() => {
+    return !currentWalletInfo;
+  }, [newWallet]);
+
   const phraseArray = useMemo(() => {
     if (!newWallet) {
       return [];
@@ -116,7 +120,8 @@ export default function NewWalletDialog() {
                   alignItems: 'center',
                 }}
               >
-                {item}
+                <div className='wallet-new-dialog-phrase-index'>{index + 1}</div>
+                <span>{item}</span>
               </div>
             ))}
           </div>
@@ -154,31 +159,40 @@ export default function NewWalletDialog() {
           </div>
         </div>
       </div>
-      <div
-        className="div-block-11"
-        style={{ cursor: 'pointer' }}
-        onClick={handleShow}
-        onMouseEnter={() => setIsHover(true)}
-        onMouseLeave={() => setIsHover(false)}
-      >
-        <div
-          className="text-block-7"
-          style={{
-            color: isHover ? '#111' : 'rgba(17, 17, 17, 0.5)',
-          }}
-        >
-          New
+      {initNew ? (
+        <div className="div-block-10 div-block-new-w">
+          <div className="text-block-6">CREATE AN ACCOUNT TO START MINING</div>
+          <div className="new-w-go" onClick={handleShow}>
+            GO
+          </div>
         </div>
-        <img
-          style={{
-            opacity: isHover ? '1' : '0.5',
-          }}
-          src="images/添加.svg"
-          loading="lazy"
-          alt=""
-          className="image-8"
-        />
-      </div>
+      ) : (
+        <div
+          className="div-block-11"
+          style={{ cursor: 'pointer' }}
+          onClick={handleShow}
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+        >
+          <div
+            className="text-block-7"
+            style={{
+              color: isHover ? '#111' : 'rgba(17, 17, 17, 0.5)',
+            }}
+          >
+            New
+          </div>
+          <img
+            style={{
+              opacity: isHover ? '1' : '0.5',
+            }}
+            src="images/添加.svg"
+            loading="lazy"
+            alt=""
+            className="image-8"
+          />
+        </div>
+      )}
     </>
   );
 }

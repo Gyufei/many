@@ -22,9 +22,9 @@ export default function Section5() {
             position: 'relative',
           }}
         >
-          <div style={{ position: 'relative', borderRadius: '20px', zIndex: 100, overflow: 'hidden', padding: '2px 2px' }}>
+          <div className="div-block-393">
             <div className="small-light-bg">
-              <video className="video-3" style={{}} playsInline muted loop autoPlay src="images/small-light.mp4"></video>
+              <video className="video-3" playsInline muted loop autoPlay src="images/small-light.mp4"></video>
             </div>
             <div className="div-block-48 color-shadow">
               <img
@@ -62,6 +62,7 @@ export default function Section5() {
           </div>
         </div>
         <div
+          className="div-block-478"
           style={{
             position: 'relative',
             zIndex: 100,

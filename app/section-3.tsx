@@ -141,11 +141,13 @@ export default function Section3() {
             </div>
           </div>
         </div>
-        <div className="div-block-27" style={{ height: '680px' }}>
+        <div className="div-block-27">
           {displayLogs.map((log) => (
             <div key={log.blockNumber} className="div-block-29">
               <div className="div-block-30">
-                <div className="div-block-28"></div>
+                <div className="div-block-28">
+                  <img src="images/mining.svg" loading="lazy" width="48" height="48" alt="" className="image-pla" />
+                </div>
                 <div className="div-block-31">
                   <div className="text-block-16">#{log.blockNumber}</div>
                   <div className="text-block-17">{formatDistanceToNow(log.time)}</div>
