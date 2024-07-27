@@ -1,6 +1,5 @@
-root {
-  --white: white;
-  --black: black;
+:root {
+  --font-nb: 'Nb Architekt Webfont', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Roboto', 'Segoe UI', 'Ubuntu', 'Helvetica Neue', 'Arial', 'sans-serif';
 }
 
 .div-block {
@@ -8,7 +7,7 @@ root {
   justify-content: space-between;
   align-items: center;
   padding: 16px 80px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-weight: 400;
   display: flex;
   position: relative;
@@ -82,7 +81,7 @@ root {
 .text-block-2 {
   color: #fff;
   letter-spacing: -0.01em;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 80px;
   font-weight: 700;
   line-height: 100px;
@@ -125,7 +124,7 @@ root {
 .text-block-4 {
   color: #111;
   margin-right: 12px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 16px;
   line-height: 24px;
 }
@@ -190,7 +189,7 @@ root {
   color: #fff;
   text-transform: uppercase;
   width: 1024px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 20px;
   line-height: 30px;
 }
@@ -217,7 +216,7 @@ root {
 
 .heading {
   color: #111;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   line-height: 60px;
 }
@@ -246,7 +245,7 @@ root {
   color: #f79218;
   font-size: 24px;
   line-height: 26px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
 }
 
 .div-block-10 {
@@ -260,27 +259,27 @@ root {
 
 .text-block-6 {
   color: rgba(17, 17, 17, 0.5);
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 20px;
   font-weight: 700;
   line-height: 30px;
 }
 
 .text-block-6.label-title {
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
 }
 
 .text-block-7 {
   color: rgba(17, 17, 17, 0.5);
   text-transform: none;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 20px;
   font-weight: 700;
   line-height: 30px;
 }
 
 .wallet-new-dialog {
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
 }
 
 .wallet-new-dialog-content {
@@ -395,7 +394,7 @@ root {
 
 .text-block-9 {
   color: rgba(17, 17, 17, 0.5);
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 20px;
   font-weight: 700;
   line-height: 30px;
@@ -526,7 +525,7 @@ root {
 .text-block-stop {
   text-transform: uppercase;
   margin-left: 12px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   line-height: 50px;
 }
@@ -545,7 +544,7 @@ root {
 
 .text-block-13 {
   color: #fff;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   font-weight: 700;
   line-height: 60px;
@@ -553,7 +552,7 @@ root {
 
 .text-block-14 {
   text-transform: uppercase;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 22px;
   line-height: 36px;
 }
@@ -578,7 +577,7 @@ root {
 
 .text-block-15 {
   text-transform: uppercase;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 22px;
   line-height: 36px;
 }
@@ -726,7 +725,7 @@ root {
 
 .text-block-22 {
   color: #111;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   line-height: 60px;
 }
@@ -763,7 +762,7 @@ root {
   align-items: flex-start;
   padding-bottom: 56px;
   padding-left: 30px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 18px;
   line-height: 26px;
   display: flex;
@@ -802,7 +801,7 @@ root {
 .div-block-42 {
   padding-bottom: 30px;
   padding-left: 30px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 18px;
   line-height: 26px;
   display: block;
@@ -818,7 +817,7 @@ root {
 
 .text-block-28 {
   margin-top: 160px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   font-weight: 700;
   line-height: 60px;
@@ -834,7 +833,7 @@ root {
 
 .text-block-29 {
   color: rgba(17, 17, 17, 0.5);
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 24px;
   line-height: 36px;
 }
@@ -842,7 +841,7 @@ root {
 .text-block-30 {
   color: #111;
   margin-top: 16px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 48px;
   font-weight: 700;
   line-height: 72px;
@@ -861,7 +860,7 @@ root {
 }
 
 .div-block-46 {
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   font-weight: 700;
   line-height: 60px;
@@ -974,7 +973,7 @@ root {
 
 .text-block-34 {
   color: #fff;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 24px;
   font-weight: 700;
   line-height: 36px;
@@ -982,7 +981,7 @@ root {
 
 .text-block-35 {
   color: #fff;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 28px;
   font-weight: 700;
   line-height: 42px;
@@ -1026,7 +1025,7 @@ root {
 
 .text-block-36 {
   color: rgba(255, 255, 255, 0.5);
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 20px;
   line-height: 28px;
 }
@@ -1034,7 +1033,7 @@ root {
 .text-block-37 {
   color: #fff;
   margin-top: 16px;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 48px;
   line-height: 72px;
 }
@@ -1106,7 +1105,7 @@ root {
 
 .text-block-39 {
   color: #111;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   font-weight: 700;
   line-height: 60px;
@@ -1155,7 +1154,7 @@ root {
 
 .text-block-41 {
   color: #fff;
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
   font-size: 50px;
   font-weight: 700;
   line-height: 80px;
@@ -1178,7 +1177,7 @@ root {
 
 .text-block-43 {
   color: rgba(255, 255, 255, 0.4);
-  font-family: Nb Architekt Webfont, sans-serif;
+  font-family: var(--font-nb);
 }
 
 .image-17,
@@ -2010,6 +2009,7 @@ a {
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+21-7E;
 }
 @font-face {
   font-family: 'Nb Architekt Webfont';
@@ -2017,6 +2017,7 @@ a {
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+21-7E;
 }
 @font-face {
   font-family: 'Nb Architekt Webfont';
@@ -2024,4 +2025,5 @@ a {
   font-weight: 300;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+21-7E;
 }

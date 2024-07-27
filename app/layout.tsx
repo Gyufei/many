@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { inter, NbArchitekt } from './fonts';
+import { inter } from './fonts';
 import './css/normalize.css';
 import './css/webflow.css';
 import './css/globals.css';
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${NbArchitekt.variable} ${inter.variable}`}>
+      <body className={`${inter.variable}`}>
         <Web3Provider>{children}</Web3Provider>
       </body>
     </html>
