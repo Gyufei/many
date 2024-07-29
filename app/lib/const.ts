@@ -2,8 +2,6 @@ export interface IChainInfo {
   id: number;
   name: 'Mantle' | 'Eth';
   logo: string;
-  contractAddress: string;
-  addressBlock: number;
   nativeCurrency: {
     decimals: number;
     name: string;
@@ -20,7 +18,15 @@ export interface IChainInfo {
     };
   };
   testnet: boolean;
+  address: {
+    many: string;
+    manyDeployBlock: number;
+    marketPlace: string;
+    MineNFTIds: Array<number>;
+  };
 }
+
+export type ChainName = IChainInfo['name'];
 
 // Eth Testnet
 const EthChain: IChainInfo = {
@@ -43,8 +49,12 @@ const EthChain: IChainInfo = {
     },
   },
   testnet: true,
-  contractAddress: '0x593e5aDffb7755213Ecd366bD563D8a52D0C0f32',
-  addressBlock: 20706
+  address: {
+    many: '0x880F0d29dd9b3D6AD720E413dAcFB3E1A0703e27',
+    manyDeployBlock: 20706,
+    marketPlace: '0x4C05f6EFBA9fc9371f95b32Fea56e67E0E4Bd6CE',
+    MineNFTIds: [1, 2, 3],
+  },
 };
 
 // Mantle Sepolia
@@ -68,8 +78,12 @@ const MantleChain: IChainInfo = {
     },
   },
   testnet: true,
-  contractAddress: '0xeA6C1670AD3771ccf1cB86C4db5A9b8C8B50C53c',
-  addressBlock: 9827607
+  address: {
+    many: '0x59e9632078187D336d8EA0F529720A88f398Ca3c',
+    manyDeployBlock: 10041935,
+    marketPlace: '0x8a9AB1363BA18042CC1972af5eA2149A4a70a688',
+    MineNFTIds: [1, 2, 3],
+  },
 };
 
 export const Chains = [MantleChain, EthChain];
@@ -78,10 +92,3 @@ export const ChainMap: Record<string, IChainInfo> = Chains.reduce((acc, chain) =
   acc[chain.name] = chain;
   return acc;
 }, {} as any);
-
-export const ChainIdMap: Record<number, IChainInfo> = Chains.reduce((acc, chain) => {
-  acc[chain.id] = chain;
-  return acc;
-}, {} as any);
-
-export type TypeChain = IChainInfo['name'];

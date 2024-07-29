@@ -10,43 +10,45 @@ const CurrentWalletStorageKey = 'CurrentWallet';
 
 export function useWallet() {
   const [wallets, setWallets] = useState<IWallet[]>([
-    //   {
-    //   address: '0xb347921E0524d05362D77CbBc247fc9E2Ad5dc95',
-    //   privateKey: 'a37e30c516210751449d62e6a8a5c17ce6025bbdc5851192013f30e90ea8d8c8'
-    // }
+    {
+      address: '0xb347921E0524d05362D77CbBc247fc9E2Ad5dc95',
+      privateKey: 'a37e30c516210751449d62e6a8a5c17ce6025bbdc5851192013f30e90ea8d8c8',
+    },
   ]);
   const [currentWallet, setCurrentWallet] = useState<string>();
 
+  const [init, setInit] = useState(false);
+
   useEffect(() => {
-    // 在组件挂载时，从 localStorage 恢复值
     const walletsStorageValue = localStorage.getItem(WalletsStorageKey);
     if (walletsStorageValue) {
       const was = JSON.parse(walletsStorageValue);
       setWallets(was);
+
+      const currWalletStorageValue = localStorage.getItem(CurrentWalletStorageKey);
+      if (currWalletStorageValue) {
+        const wa = JSON.parse(currWalletStorageValue);
+        if (was.some((w: IWallet) => w.address === wa)) {
+          setCurrentWallet(wa);
+        }
+      } else {
+        setCurrentWallet(was[0]?.address);
+      }
     }
 
-    const currWalletStorageValue = localStorage.getItem(CurrentWalletStorageKey);
-    if (currWalletStorageValue) {
-      const wa = JSON.parse(currWalletStorageValue);
-      setCurrentWallet(wa);
-    }
+    setInit(true);
   }, []);
 
   useEffect(() => {
-    if (wallets.length > 0) {
+    if (init) {
       const serializedValue = JSON.stringify(wallets);
       localStorage.setItem(WalletsStorageKey, serializedValue);
-    }
-
-    if (currentWallet) {
-      const serializedValue = JSON.stringify(currentWallet);
-      localStorage.setItem(CurrentWalletStorageKey, serializedValue);
     }
   }, [wallets]);
 
   useEffect(() => {
-    if (currentWallet) {
-      const serializedValue = JSON.stringify(currentWallet);
+    if (init) {
+      const serializedValue = JSON.stringify(currentWallet || '');
       localStorage.setItem(CurrentWalletStorageKey, serializedValue);
     }
   }, [currentWallet]);
@@ -72,11 +74,27 @@ export function useWallet() {
     [wallets]
   );
 
+  const deleteWallet = useCallback(
+    (walletAddr: string) => {
+      setWallets(() => {
+        const newW = wallets.filter((w) => w.address !== walletAddr);
+
+        if (currentWallet === walletAddr) {
+          setCurrentWallet(newW[0]?.address);
+        }
+
+        return newW;
+      });
+    },
+    [wallets]
+  );
+
   return {
     setCurrentWallet,
     currentWalletInfo,
     wallets,
     addWallet,
+    deleteWallet,
     walletsMap,
   };
 }

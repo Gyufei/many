@@ -42,15 +42,11 @@ self.addEventListener('message', (event) => {
 
     const saltHex = '0x' + salt.toString(16).padStart(64, '0');
 
-    const packed1 = hashPrefix + salt.toString(16).padStart(64, '0') + computedHash.slice(2) + "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-    const signature = ethers.utils.keccak256(packed1);
-
     self.postMessage(JSON.stringify({
       type: 'hash',
       payload: {
         computedHash,
-        saltHex,
-        signature,
+        saltHex
       },
     }));
 

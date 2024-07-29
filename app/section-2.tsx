@@ -2,12 +2,16 @@
 
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Web3Context } from './web3-context';
-import { Chains, TypeChain } from './lib/const';
+import { Chains, ChainName } from './lib/const';
 import BigNumber from 'bignumber.js';
 import { useRpcInput } from './hook/use-rpc-input';
 import { useBalanceDisplay } from './hook/use-balance-display';
 import NewWalletDialog from './new-wallet-dialog';
 import { CopyBtn } from './copy-btn';
+import { Paths } from './lib/PathMap';
+import { NFTContext } from './nft-context';
+import { constants } from 'ethers';
+import { IWallet } from './hook/use-wallet';
 
 let CurrentHash: string = '';
 let InfoTimeout: number;
@@ -22,9 +26,12 @@ export default function Section2() {
     setCurrentChain,
     provider,
     wallet,
+    deleteWallet,
     contract,
     setHashRate,
   } = useContext(Web3Context);
+
+  const { currentNFTInfo } = useContext(NFTContext);
 
   const address = currentWalletInfo?.address || '';
   const currency = currentChainInfo?.nativeCurrency || '';
@@ -76,7 +83,7 @@ export default function Section2() {
     setShowNetSelect(!showNetSelect);
   }
 
-  function handleSelectNet(chain: TypeChain) {
+  function handleSelectNet(chain: ChainName) {
     setCurrentChain(chain);
     setShowNetSelect(false);
   }
@@ -155,13 +162,55 @@ export default function Section2() {
     });
   }
 
-  async function mineAction(mined: { computedHash: string; saltHex: string; signature: string }) {
-    const contractObj = contract;
-    const gasLimit = await (contractObj.estimateGas as any)['mine'](mined.computedHash, mined.saltHex, mined.signature);
-
-    await contractObj.mine(mined.computedHash, mined.saltHex, mined.signature, {
-      gasLimit: gasLimit.toString(),
+  async function fetchMineSignature(minedHash: string, salt: string) {
+    const path = Paths.mine;
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        minedHash,
+        salt,
+        wallet: currentWalletInfo.address,
+      }),
     });
+
+    const jsonRes = await res.json();
+    return jsonRes.status ? jsonRes.data : {};
+  }
+
+  async function mineAction(mined: { computedHash: string; saltHex: string }) {
+    try {
+      const { signature, orderId, merkleProof } = await fetchMineSignature(mined.computedHash, mined.saltHex);
+
+      const {
+        id: serialId,
+        tokenId,
+        address: nftTokenAddress,
+      } = currentNFTInfo || {
+        id: 0,
+        tokenId: 0,
+        address: constants.AddressZero,
+      };
+
+      const contractObj = contract;
+      const gasLimit = await (contractObj.estimateGas as any)['mine'](
+        serialId,
+        tokenId,
+        nftTokenAddress,
+        mined.computedHash,
+        mined.saltHex,
+        merkleProof,
+        signature
+      );
+
+      await contractObj.mine(serialId, tokenId, nftTokenAddress, mined.computedHash, mined.saltHex, merkleProof, signature, {
+        gasLimit: gasLimit.toString(),
+      });
+    } catch (e) {
+      mineStop();
+    }
   }
 
   async function mineStart() {
@@ -186,7 +235,7 @@ export default function Section2() {
 
         if (dataReal.type === 'hash') {
           const { computedHash, saltHex, signature, hashRate } = dataReal.payload;
-          mineAction({ computedHash, saltHex, signature }).then(() => {
+          mineAction({ computedHash, saltHex }).then(() => {
             mineStart();
           });
         }
@@ -220,8 +269,7 @@ export default function Section2() {
       );
     } catch (e) {
       console.log('mine failed', e);
-      setIsMining(false);
-      workerRef.current?.terminate();
+      mineStop();
     }
   }
 
@@ -240,20 +288,31 @@ export default function Section2() {
   useEffect(() => {
     if (isMining) {
       handleStartClick();
+    } else {
+      handleStopClick();
     }
   }, [isMining]);
+
+  const handleStopClick = () => {
+    clearTimeout(sliderTimer);
+    if (sliderRef.current) {
+      sliderRef.current.style.transform = 'translateX(-90%)';
+    }
+  };
 
   const handleStartClick = () => {
     if (!sliderRef.current || !isMining) {
       return;
     }
 
-    sliderRef.current.style.transform = 'translateX(0)';
+    sliderRef.current.style.transform = 'translateX(-90%)';
     animateSlider();
   };
 
+  const [sliderTimer, setSliderTimer] = useState<any>(null);
+
   const animateSlider = () => {
-    let position = -95;
+    let position = -90;
     const sliderElement = sliderRef.current;
 
     const slide = () => {
@@ -262,24 +321,30 @@ export default function Section2() {
       }
 
       if (position >= 0) {
-        position = -95;
+        position = -90;
       }
       position += 1;
       sliderElement.style.transform = `translateX(${position}%)`;
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         slide();
       }, 300);
+
+      setSliderTimer(timer);
     };
 
     slide();
   };
+
+  function handleDeleteWallet(wa: IWallet) {
+    deleteWallet(wa.address);
+  }
 
   return (
     <section className="section-2" id="section2">
       <div className="div-block-9">
         <h1 className="heading">system</h1>
 
-        {!currentWalletInfo ? (
+        {!wallets.length ? (
           <NewWalletDialog />
         ) : (
           <div className="div-block-10">
@@ -298,7 +363,6 @@ export default function Section2() {
                   className="div-block-14"
                   style={{
                     position: 'relative',
-                    boxShadow: showWalletSelect ? 'inset 0 -2px #111' : 'inset 0 -2px #d3d4d6',
                   }}
                   onClick={() => handleToSelectWallet()}
                 >
@@ -315,7 +379,7 @@ export default function Section2() {
                     {shortenAddress}
                   </div>
                   <img
-                    src="images/下1_down-one-2-1.svg"
+                    src="images/down-one-2-1.svg"
                     style={{
                       transform: showWalletSelect ? 'rotate(180deg)' : 'rotate(0deg)',
                     }}
@@ -345,19 +409,27 @@ export default function Section2() {
                             borderBottom: index !== wallets.length - 1 ? '1px solid #D3D4D6' : 'none',
                             display: 'flex',
                             justifyContent: 'space-between',
+                            color: wallet.address === currentWalletInfo?.address ? '#F79218' : '#111',
+                            opacity: wallet.address === currentWalletInfo?.address ? '1' : '0.5',
                           }}
-                          onClick={() => handleSelectWallet(wallet.address)}
                         >
-                          <div className="text-block-8">{wallet.address}</div>
-                          <div className="text-block-44">{shorterAddress(wallet.address)}</div>
+                          <div onClick={() => handleSelectWallet(wallet.address)} className="text-block-8">
+                            {wallet.address}
+                          </div>
+                          <div onClick={() => handleSelectWallet(wallet.address)} className="text-block-44">
+                            {shorterAddress(wallet.address)}
+                          </div>
                           <div
+                            onClick={() => handleDeleteWallet(wallet)}
                             style={{
                               display: 'flex',
                               alignItems: 'center',
                             }}
                           >
-                            {wallet.address === currentWalletInfo?.address && (
-                              <img src="images/check.svg" loading="lazy" alt="" className="image-9" />
+                            {wallet.address === currentWalletInfo?.address ? (
+                              <img src="images/x.svg" loading="lazy" alt="" className="image-9" />
+                            ) : (
+                              <img src="images/x-gray.svg" loading="lazy" alt="" className="image-9" />
                             )}
                           </div>
                         </div>
@@ -377,19 +449,14 @@ export default function Section2() {
               <div>
                 <div className="text-block-6">network</div>
                 <div data-hover="false" data-delay="0" className="dropdown w-dropdown" onClick={() => handleToSelectNet()}>
-                  <div
-                    className="dropdown-toggle w-dropdown-toggle"
-                    style={{
-                      boxShadow: showNetSelect ? 'inset 0 -2px #111' : 'inset 0 -2px #d3d4d6',
-                    }}
-                  >
+                  <div className="dropdown-toggle w-dropdown-toggle">
                     <div className="div-block-63">
                       <img width="32" height="32" alt="" src={currentChainInfo.logo} loading="lazy" className="image-11" id="chainLogo" />
                       <div className="text-block-46" id="chainName">
                         {currentChainInfo.name}
                       </div>
                     </div>
-                    <img loading="lazy" src="images/下1_down-one-2-1.svg" alt="" className="image-10" />
+                    <img loading="lazy" src="images/down-one-2-1.svg" alt="" className="image-10" />
                   </div>
                   {showNetSelect && (
                     <nav
@@ -411,6 +478,7 @@ export default function Section2() {
                           style={{
                             padding: '16px 0px',
                             borderBottom: index !== Chains.length - 1 ? '1px solid #D3D4D6' : 'none',
+                            color: chain.name === currentChainInfo.name ? '#F79218' : 'rgba(17, 17, 17, 0.5)',
                           }}
                           onClick={() => setCurrentChain(chain.name)}
                         >
@@ -503,11 +571,9 @@ export default function Section2() {
                   <strong>mining status</strong>
                 </div>
                 <div className="image-slider-container">
-                  {isMining && (
-                    <div ref={sliderRef} className="image-slider">
-                      <img src="images/路径-1.svg" loading="lazy" alt="" className="image-13" />
-                    </div>
-                  )}
+                  <div ref={sliderRef} className="image-slider" style={{ transform: `translateX(-90%)` }}>
+                    <img src="images/path-1.svg" alt="" className="image-13" />
+                  </div>
                 </div>
               </div>
               <div className="div-block-20">
@@ -526,7 +592,7 @@ export default function Section2() {
               </div>
             ) : (
               <div className="div-block-22" onClick={() => mineStart()}>
-                <img src="images/路径.svg" loading="lazy" alt="" className="image-20" />
+                <img src="images/path.svg" loading="lazy" alt="" className="image-20" />
                 <div className="text-block-12">start</div>
               </div>
             )}

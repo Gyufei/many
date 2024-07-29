@@ -8,12 +8,12 @@ export default function Section6() {
         <div className="div-block-57">
           <Link href="">
             <img
-              src="images/矩形-414x.png"
+              src="images/rect-414x.png"
               loading="lazy"
               width="492"
               height="328"
               alt=""
-              srcSet="images/矩形-414x-p-500.png 500w, images/矩形-414x-p-800.png 800w, images/矩形-414x-p-1080.png 1080w, images/矩形-414x-p-1600.png 1600w, images/矩形-414x.png 1968w"
+              srcSet="images/rect-414x-p-500.png 500w, images/rect-414x-p-800.png 800w, images/rect-414x-p-1080.png 1080w, images/rect-414x-p-1600.png 1600w, images/rect-414x.png 1968w"
               sizes="(max-width: 479px) 92vw, (max-width: 767px) 47vw, 48vw"
               className="image-21"
             />
@@ -24,12 +24,12 @@ export default function Section6() {
           </Link>
           <Link href="">
             <img
-              src="images/矩形-414x.png"
+              src="images/rect-414x.png"
               loading="lazy"
               width="492"
               height="328"
               alt=""
-              srcSet="images/矩形-414x-p-500.png 500w, images/矩形-414x-p-800.png 800w, images/矩形-414x-p-1080.png 1080w, images/矩形-414x-p-1600.png 1600w, images/矩形-414x.png 1968w"
+              srcSet="images/rect-414x-p-500.png 500w, images/rect-414x-p-800.png 800w, images/rect-414x-p-1080.png 1080w, images/rect-414x-p-1600.png 1600w, images/rect-414x.png 1968w"
               sizes="(max-width: 479px) 92vw, (max-width: 767px) 47vw, 48vw"
               className="image-22"
             />

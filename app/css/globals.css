@@ -1,5 +1,6 @@
 :root {
-  --font-nb: 'Nb Architekt Webfont', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Roboto', 'Segoe UI', 'Ubuntu', 'Helvetica Neue', 'Arial', 'sans-serif';
+  --font-nb: 'Nb Architekt Webfont', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Roboto', 'Segoe UI', 'Ubuntu', 'Helvetica Neue',
+    'Arial', 'sans-serif';
 }
 
 .div-block {
@@ -221,14 +222,6 @@
   line-height: 60px;
 }
 
-.div-block-new-w {
-  display: flex;
-  height: 500px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .new-w-go {
   border-width: 4;
   border-style: solid;
@@ -238,7 +231,6 @@
   border-radius: 24px;
   justify-content: center;
   align-items: center;
-  margin-top: 40px;
   width: 200px;
   height: 48px;
   display: flex;
@@ -257,12 +249,36 @@
   margin-top: 30px;
 }
 
+.div-block-new-w {
+  display: flex;
+  height: 168px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+}
+
 .text-block-6 {
   color: rgba(17, 17, 17, 0.5);
   font-family: var(--font-nb);
   font-size: 20px;
   font-weight: 700;
   line-height: 30px;
+}
+
+.text-block-639 {
+  color: rgb(17, 17, 17);
+  font-family: var(--font-nb);
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 36px;
+}
+
+.text-block-640 {
+  color: rgba(17, 17, 17, 0.5);
+  font-family: var(--font-nb);
+  font-size: 22px;
+  font-weight: normal;
+  line-height: 32px;
 }
 
 .text-block-6.label-title {
@@ -456,6 +472,7 @@
   position: relative;
   width: 755px;
   overflow: hidden;
+  flex: 1;
 }
 
 .image-slider {
@@ -614,6 +631,7 @@
   position: static;
   box-shadow: 5px 5px 10px #f79218, -5px -5px 10px rgba(255, 255, 255, 0.8), 50px -50px 50px rgba(247, 146, 24, 0.2),
     -15px 15px 24px #f79218, -5px 5px 10px #f79218, 5px 5px 10px rgba(255, 255, 255, 0.8), -50px 50px 50px rgba(247, 146, 24, 0.2);
+  overflow-y: auto;
 }
 
 .div-block-28 {
@@ -739,7 +757,7 @@
 }
 
 .div-block-37 {
-  background-image: url('/images/矩形-394x.png');
+  background-image: url('/images/rect-394x.png');
   background-position: 0 0;
   background-size: cover;
   border-radius: 24px;
@@ -801,6 +819,7 @@
 .div-block-42 {
   padding-bottom: 30px;
   padding-left: 30px;
+  padding-right: 1px;
   font-family: var(--font-nb);
   font-size: 18px;
   line-height: 26px;
@@ -900,25 +919,35 @@
 .div-block-393 {
   position: relative;
   border-radius: 20px;
+  cursor: pointer;
   z-index: 100;
   overflow: hidden;
-  padding: 2px 2px;
+  padding: 4px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .small-light-bg {
   position: absolute;
   z-index: 99;
-  top: -48px;
-  left: -40px;
+  top: -47px;
+  left: -41px;
+}
+
+.video-3 {
+  width: 404px;
 }
 
 .div-block-48 {
+  position: relative;
+  z-index: 101;
   background-color: #0e1218;
   border: 6px solid rgba(255, 255, 255, 0.4);
   border-radius: 20px;
   justify-content: center;
   align-items: center;
-  width: 314px;
+  width: 310px;
   height: 200px;
   display: flex;
 }
@@ -1418,6 +1447,16 @@
     font-family: var(--font-inter);
   }
 
+  .text-block-639 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .text-block-640 {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
   .text-block-6,
   .text-block-7 {
     font-size: 14px;
@@ -1756,22 +1795,11 @@
     border-radius: 0px;
   }
 
-  .small-light-bg {
-    display: none;
-  }
-
-  .video-3 {
-    display: none;
-  }
-
   .div-block-48 {
     border-width: 2px;
     border-radius: 8px;
     width: 100px;
     height: 100px;
-  }
-
-  .div-block-48 {
     box-shadow: none;
     border-radius: 8px;
     width: 101px;

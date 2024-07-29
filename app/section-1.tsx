@@ -7,9 +7,9 @@ export default function Section1() {
       <div className="div-block">
         <img src="images/Many.svg" loading="lazy" alt="" className="image" />
         <div className="div-block-2">
-          <img src="images/圆形-3.svg" loading="lazy" alt="" className="image-2" />
+          <img src="images/circle-3.svg" loading="lazy" alt="" className="image-2" />
           <div className="text-block">EN</div>
-          <img src="images/下1_down-one-2.svg" loading="lazy" alt="" className="image-4" />
+          <img src="images/down-one-2.svg" loading="lazy" alt="" className="image-4" />
         </div>
       </div>
       <div className="div-block-4">

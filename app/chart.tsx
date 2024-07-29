@@ -39,7 +39,7 @@ export default function RateChart(props: any) {
         type: 'line',
       },
       title: {
-        text: 'My hashrate', // 设置标题文本内容
+        text: 'My hashrate',
         style: {
           color: '#F5F5F5',
           fontFamily: 'var(--font-inter)',
@@ -150,7 +150,7 @@ export default function RateChart(props: any) {
         headerFormat:
           '<div style="color: #fff; font-size: 20px; line-height: 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-top: 8px;">{point.y} M/S</div>',
         pointFormat:
-          '<div style="color: rgba(255, 255, 255, 0.5);font-size: 12px;line-height: 24px;margin-top: 6px">{point.x:%H:%M, %b %e}</div>', // 设置tooltip格式，包括时
+          '<div style="color: rgba(255, 255, 255, 0.5);font-size: 12px;line-height: 24px;margin-top: 6px">{point.x:%H:%M, %b %e}</div>',
         footerFormat: '',
       },
       responsive: {

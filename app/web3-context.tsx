@@ -1,14 +1,14 @@
 'use client';
 import React, { createContext, useCallback, useMemo, useState } from 'react';
-import { ChainMap, IChainInfo, TypeChain } from './lib/const';
+import { ChainMap, IChainInfo, ChainName } from './lib/const';
 import { providers, Wallet, Contract } from 'ethers';
 import { useRpc } from './hook/use-rpc';
 import { IWallet, useWallet } from './hook/use-wallet';
-import { ABI } from './lib/abi';
+import { ManyABI } from './lib/many-abi';
 
 interface IWeb3Context {
-  currentChain: TypeChain | null;
-  setCurrentChain: (chain: TypeChain) => void;
+  currentChain: ChainName | null;
+  setCurrentChain: (chain: ChainName) => void;
   currentChainInfo: IChainInfo;
 
   currentRpc: string;
@@ -19,6 +19,7 @@ interface IWeb3Context {
   currentWalletInfo: IWallet;
   wallets: IWallet[];
   addWallet: (wallet: IWallet) => void;
+  deleteWallet: (walletAddr: string) => void;
 
   provider: providers.JsonRpcProvider;
   wallet: Wallet | null;
@@ -31,13 +32,12 @@ interface IWeb3Context {
 
 export const Web3Context = createContext<IWeb3Context>({} as any);
 
-// 创建上下文提供者
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
-  const [currentChain, setCurrentChain] = useState<TypeChain>('Mantle');
+  const [currentChain, setCurrentChain] = useState<ChainName>('Mantle');
   const currentChainInfo = ChainMap[currentChain];
 
   const { currentRpc, isCustomRpc, setCustomRpc } = useRpc(currentChain);
-  const { setCurrentWallet, currentWalletInfo, wallets, addWallet, walletsMap } = useWallet();
+  const { setCurrentWallet, currentWalletInfo, wallets, addWallet, deleteWallet, walletsMap } = useWallet();
 
   const [hashRate, setHashRate] = useState('');
 
@@ -54,19 +54,18 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   }, [currentWalletInfo, provider]);
 
   const readContract = useMemo(() => {
-    const contract = new Contract(currentChainInfo.contractAddress, ABI, provider!);
+    const contract = new Contract(currentChainInfo.address.many, ManyABI, provider!);
 
     return contract;
   }, [currentChainInfo, provider]);
 
   const contract = useMemo(() => {
-    const contract = new Contract(currentChainInfo.contractAddress, ABI, wallet!);
+    const contract = new Contract(currentChainInfo.address.many, ManyABI, wallet!);
 
     return contract;
   }, [currentChainInfo, wallet]);
 
   return (
-    // 使用上下文提供者包装子组件
     <Web3Context.Provider
       value={
         {
@@ -81,6 +80,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
           currentWalletInfo,
           wallets,
           addWallet,
+          deleteWallet,
           walletsMap,
 
           provider,

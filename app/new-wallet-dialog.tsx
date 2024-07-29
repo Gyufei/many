@@ -3,14 +3,14 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { Web3Context } from './web3-context';
 
 export default function NewWalletDialog() {
-  const { addWallet, currentWalletInfo } = useContext(Web3Context);
+  const { addWallet, currentWalletInfo, wallets } = useContext(Web3Context);
   const [visible, setVisible] = useState(false);
 
   const [isHover, setIsHover] = useState(false);
   const [newWallet, setNewWallet] = useState<Wallet | null>(null);
 
   const initNew = useMemo(() => {
-    return !currentWalletInfo;
+    return !wallets.length;
   }, [newWallet]);
 
   const phraseArray = useMemo(() => {
@@ -120,7 +120,7 @@ export default function NewWalletDialog() {
                   alignItems: 'center',
                 }}
               >
-                <div className='wallet-new-dialog-phrase-index'>{index + 1}</div>
+                <div className="wallet-new-dialog-phrase-index">{index + 1}</div>
                 <span>{item}</span>
               </div>
             ))}
@@ -161,7 +161,29 @@ export default function NewWalletDialog() {
       </div>
       {initNew ? (
         <div className="div-block-10 div-block-new-w">
-          <div className="text-block-6">CREATE AN ACCOUNT TO START MINING</div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              gap: '40px',
+            }}
+          >
+            <img src="images/create-account.svg" loading="lazy" alt="" className="image-20" />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                marginLeft: '8px',
+                gap: '16px',
+              }}
+            >
+              <div className="text-block-639">CREATE AN ACCOUNT</div>
+              <div className="text-block-640">Before mining, you need to have an account</div>
+            </div>
+          </div>
           <div className="new-w-go" onClick={handleShow}>
             GO
           </div>
@@ -186,7 +208,7 @@ export default function NewWalletDialog() {
             style={{
               opacity: isHover ? '1' : '0.5',
             }}
-            src="images/添加.svg"
+            src="images/add.svg"
             loading="lazy"
             alt=""
             className="image-8"

@@ -10,7 +10,7 @@ export function LearnMoreBtn() {
       <div style={{ zIndex: 10 }} className="text-block-4">
         Learn More About Powfi
       </div>
-      <img style={{ zIndex: 10 }} src="images/箭头右_arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
+      <img style={{ zIndex: 10 }} src="images/arrow-right.svg" loading="lazy" width="16" height="16" alt="" className="image-3" />
       <div
         style={{
           left: blockPosition ? `${blockPosition}px` : 'auto',

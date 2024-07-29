@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ChainMap, TypeChain } from '../lib/const';
+import { ChainMap, ChainName } from '../lib/const';
 
 const StorageKey = 'CustomRpc';
 
-export function useRpc(currentChain: TypeChain) {
+export function useRpc(currentChain: ChainName) {
   const currentChainInfo = ChainMap[currentChain];
 
-  const [customRpcMap, setCustomRpcMap] = useState<Record<TypeChain, string>>({
+  const [customRpcMap, setCustomRpcMap] = useState<Record<ChainName, string>>({
     Mantle: '',
     Eth: '',
   });
@@ -30,7 +30,6 @@ export function useRpc(currentChain: TypeChain) {
   }, []);
 
   useEffect(() => {
-    // 在组件挂载时，从 localStorage 恢复值
     const savedValue = localStorage.getItem(StorageKey);
     if (savedValue) {
       const rpcs = JSON.parse(savedValue);

@@ -4,25 +4,24 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { Web3Context } from './web3-context';
 import { utils } from 'ethers';
 import { formatDistanceToNow } from 'date-fns';
+import { Paths } from './lib/PathMap';
+import { formatEther } from 'ethers/lib/utils';
 
 export default function Section3() {
   const { currentChainInfo, currentWalletInfo, provider, readContract: contract } = useContext(Web3Context);
 
-  const address = currentChainInfo?.contractAddress || '';
-
   const [currentTab, setCurrentTab] = useState<'mine' | 'global'>('mine');
 
-  const [logs, setLogs] = useState<any[]>([]);
+  const [globalLogs, setGlobalLogs] = useState<any[]>([]);
+  const [mineLogs, setMineLogs] = useState<any[]>([]);
 
   const [updateTimerId, setUpdateTimerId] = useState<number>();
 
   const displayLogs = useMemo(() => {
-    if (currentTab === 'mine') {
-      const mineLogs = logs.filter((log) => log.sender === currentWalletInfo?.address);
-      return mineLogs.slice(0, 8);
-    }
-    return logs.slice(0, 8);
-  }, [currentWalletInfo, currentTab, logs]);
+    let logs = currentTab === 'mine' ? mineLogs : globalLogs;
+    const sortLogs = logs.sort((a, b) => b.blockNumber - a.blockNumber);
+    return sortLogs;
+  }, [currentWalletInfo, currentTab, globalLogs]);
 
   function handleMineClick() {
     setCurrentTab('mine');
@@ -32,47 +31,69 @@ export default function Section3() {
     setCurrentTab('global');
   }
 
-  async function startQuery() {
+  async function fetchLog() {
     if (updateTimerId) {
       clearTimeout(updateTimerId);
     }
 
-    const beginBlock = currentChainInfo.addressBlock;
-    const endBlock = await provider.getBlockNumber();
+    const path = Paths.activities;
+    const chainMap = {
+      Mantle: 'mantle_sepolia',
+      Eth: 'devnet',
+    };
+    const chainParams = `chain_name=${chainMap[currentChainInfo.name]}`;
+    const addressParams = currentWalletInfo ? `account=${currentWalletInfo?.address || ''}` : '';
+    const queryParams = `${chainParams}${addressParams ? '&' : ''}${addressParams}`;
+    const queryPath = `${path}?${queryParams}`;
+    const res = await fetch(queryPath);
 
-    const queryBlockArr = getQueryBlockArr(beginBlock, endBlock);
+    const jsonRes = await res.json();
 
-    if (!queryBlockArr.length) {
+    if (!jsonRes.status) {
+      console.error(jsonRes);
       return;
     }
 
-    const promiseArr = queryBlockArr.map((queryBlock) => queryAction(queryBlock.from, queryBlock.to));
-    const res = await Promise.all(promiseArr);
-    const lgs = res.flat();
-    setLogs([...lgs, ...logs]);
+    const { global_mine_info, account_mine_info } = jsonRes.data;
 
-    updateQuery(endBlock);
+    const gLogs = global_mine_info.map((log: any) => {
+      return {
+        ...log,
+        create_at: log.create_at * 1000,
+      };
+    });
+
+    const mLogs = account_mine_info.map((log: any) => {
+      return {
+        ...log,
+        create_at: log.create_at * 1000,
+      };
+    });
+
+    setMineLogs(mLogs);
+    setGlobalLogs(gLogs);
+
+    const lastEndBlock = gLogs.length ? gLogs[gLogs.length - 1].block_number : currentChainInfo.address.manyDeployBlock;
+    updateQuery(Number(lastEndBlock));
   }
 
-  function getQueryBlockArr(startBlock: number, endBlock: number) {
-    const blockSize = 3000;
-    const arr = [];
-    let fromBlock = endBlock - blockSize - 1;
-    let toBlock = endBlock;
+  async function updateQuery(lastEndBlock: number) {
+    const endBlock = await provider.getBlockNumber();
+    if (lastEndBlock >= endBlock) return;
 
-    arr.push({ from: fromBlock, to: toBlock });
-
-    while (fromBlock > startBlock) {
-      toBlock = fromBlock - 1;
-      fromBlock = fromBlock - blockSize - 1;
-      arr.push({ from: fromBlock, to: toBlock });
+    const lgs = await queryAction(lastEndBlock, endBlock);
+    if (lgs.length) {
+      setGlobalLogs([...lgs, ...globalLogs]);
     }
 
-    return arr;
+    const id = setTimeout(() => {
+      updateQuery(endBlock);
+    }, 10000);
+
+    setUpdateTimerId(id as any);
   }
 
   async function queryAction(fromBlock: number, toBlock: number) {
-    let startBlock = toBlock - 1001;
     const filter = contract.filters['Mine']();
     const events = await contract.queryFilter(filter, fromBlock, toBlock);
     if (events.length === 0) {
@@ -90,11 +111,11 @@ export default function Section3() {
         const timestamp = block!.timestamp;
 
         return {
-          time: timestamp * 1000,
-          blockNumber: log.blockNumber,
-          minedHash: log.args.minedHash,
-          sender: log.args.user,
-          rewardRate: log.args.rewardRate.toString(),
+          create_at: timestamp * 1000,
+          block_number: log.blockNumber,
+          tx_hash: log.args.minedHash,
+          miner: log.args.user,
+          rewards: formatEther(log.args?.totalRewards?.toString()),
         };
       })
     );
@@ -102,26 +123,10 @@ export default function Section3() {
     return parsedLogs;
   }
 
-  async function updateQuery(lastEndBlock: number) {
-    const endBlock = await provider.getBlockNumber();
-    if (lastEndBlock >= endBlock) return;
-
-    const lgs = await queryAction(lastEndBlock, endBlock);
-    if (lgs.length) {
-      setLogs([...lgs, ...logs]);
-    }
-
-    const id = setTimeout(() => {
-      updateQuery(endBlock);
-    }, 10000);
-
-    setUpdateTimerId(id as any);
-  }
-
   useEffect(() => {
-    setLogs([]);
-    startQuery();
-  }, [currentChainInfo.id]);
+    setGlobalLogs([]);
+    fetchLog();
+  }, [currentChainInfo.id, currentWalletInfo?.address]);
 
   function displayHash(hash: string) {
     return hash.slice(0, 10) + '...' + hash.slice(-8);
@@ -143,29 +148,29 @@ export default function Section3() {
         </div>
         <div className="div-block-27">
           {displayLogs.map((log) => (
-            <div key={log.blockNumber} className="div-block-29">
+            <div key={log.block_number} className="div-block-29">
               <div className="div-block-30">
                 <div className="div-block-28">
                   <img src="images/mining.svg" loading="lazy" width="48" height="48" alt="" className="image-pla" />
                 </div>
                 <div className="div-block-31">
-                  <div className="text-block-16">#{log.blockNumber}</div>
-                  <div className="text-block-17">{formatDistanceToNow(log.time)}</div>
+                  <div className="text-block-16">#{log.block_number}</div>
+                  <div className="text-block-17">{formatDistanceToNow(log.create_at)}</div>
                 </div>
               </div>
               <div className="div-block-32">
                 <div>
                   <div className="div-block-33">
                     <div className="text-block-18">Miner</div>
-                    <div className="text-block-19">{displayHash(log.sender)}</div>
+                    <div className="text-block-19">{displayHash(log.miner)}</div>
                   </div>
                   <div className="div-block-34">
                     <div className="text-block-18">Hash</div>
-                    <div>{displayHash(log.minedHash)}</div>
+                    <div>{displayHash(log.tx_hash)}</div>
                   </div>
                 </div>
                 <div className="div-block-35">
-                  <div className="text-block-21">{Number(log.rewardRate) / 10 ** 16} MANY</div>
+                  <div className="text-block-21">{Number(log.rewards)} MANY</div>
                 </div>
               </div>
             </div>
