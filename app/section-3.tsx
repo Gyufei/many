@@ -45,36 +45,41 @@ export default function Section3() {
     const addressParams = currentWalletInfo ? `account=${currentWalletInfo?.address || ''}` : '';
     const queryParams = `${chainParams}${addressParams ? '&' : ''}${addressParams}`;
     const queryPath = `${path}?${queryParams}`;
-    const res = await fetch(queryPath);
 
-    const jsonRes = await res.json();
+    try {
+      const res = await fetch(queryPath);
 
-    if (!jsonRes.status) {
-      console.error(jsonRes);
+      const jsonRes = await res.json();
+
+      if (!jsonRes.status) {
+        console.error(jsonRes);
+        return;
+      }
+      const { global_mine_info, account_mine_info } = jsonRes.data;
+
+      const gLogs = global_mine_info.map((log: any) => {
+        return {
+          ...log,
+          create_at: log.create_at * 1000,
+        };
+      });
+
+      const mLogs = account_mine_info.map((log: any) => {
+        return {
+          ...log,
+          create_at: log.create_at * 1000,
+        };
+      });
+
+      setMineLogs(mLogs);
+      setGlobalLogs(gLogs);
+
+      const lastEndBlock = gLogs.length ? gLogs[gLogs.length - 1].block_number : currentChainInfo.address.manyDeployBlock;
+      updateQuery(Number(lastEndBlock));
+    } catch (error) {
+      console.error('fetch log error', error);
       return;
     }
-
-    const { global_mine_info, account_mine_info } = jsonRes.data;
-
-    const gLogs = global_mine_info.map((log: any) => {
-      return {
-        ...log,
-        create_at: log.create_at * 1000,
-      };
-    });
-
-    const mLogs = account_mine_info.map((log: any) => {
-      return {
-        ...log,
-        create_at: log.create_at * 1000,
-      };
-    });
-
-    setMineLogs(mLogs);
-    setGlobalLogs(gLogs);
-
-    const lastEndBlock = gLogs.length ? gLogs[gLogs.length - 1].block_number : currentChainInfo.address.manyDeployBlock;
-    updateQuery(Number(lastEndBlock));
   }
 
   async function updateQuery(lastEndBlock: number) {

@@ -3,7 +3,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Web3Context } from './web3-context';
 import { Chains, ChainName } from './lib/const';
-import BigNumber from 'bignumber.js';
 import { useRpcInput } from './hook/use-rpc-input';
 import NewWalletDialog from './new-wallet-dialog';
 import { CopyBtn } from './copy-btn';
@@ -11,7 +10,7 @@ import { Paths } from './lib/PathMap';
 import { NFTContext } from './nft-context';
 import { constants } from 'ethers';
 import { IWallet } from './hook/use-wallet';
-import { BalanceDisplay } from './balance-display';
+import { useBalanceDisplay } from './hook/use-balance-display';
 
 let CurrentHash: string = '';
 let InfoTimeout: number;
@@ -32,6 +31,8 @@ export default function Section2() {
   } = useContext(Web3Context);
 
   const { currentNFTInfo } = useContext(NFTContext);
+
+  const { balance, balanceSymbol, rewardBalance, updateBalance } = useBalanceDisplay();
 
   const address = currentWalletInfo?.address || '';
   const currency = currentChainInfo?.nativeCurrency || '';
@@ -206,6 +207,8 @@ export default function Section2() {
       await contractObj.mine(serialId, tokenId, nftTokenAddress, mined.computedHash, mined.saltHex, merkleProof, signature, {
         gasLimit: gasLimit.toString(),
       });
+
+      updateBalance();
     } catch (e) {
       mineStop();
     }
@@ -261,7 +264,6 @@ export default function Section2() {
         return;
       }
 
-      console.log('mine start', minedCurrentHash);
       workerRef.current?.postMessage(
         JSON.stringify({ type: 'start', payload: { address, currentHash: minedCurrentHash, difficultyHash } })
       );
@@ -436,7 +438,19 @@ export default function Section2() {
                   )}
                 </div>
               </div>
-              <BalanceDisplay />
+              <div className="div-block-16">
+                <div className="text-block-9">balance</div>
+                <div className="div-block-161">
+                  <div className="text-block-10">
+                    <span className="text-block-101">{rewardBalance}</span>
+                    <span className="text-block-102">MANY</span>
+                  </div>
+                  <div className="text-block-10">
+                    <span className="text-block-101">{balance}</span>
+                    <span className="text-block-102">{balanceSymbol}</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="div-block-17">
               <div>
@@ -445,7 +459,7 @@ export default function Section2() {
                   <div className="dropdown-toggle w-dropdown-toggle">
                     <div className="div-block-63">
                       <img width="32" height="32" alt="" src={currentChainInfo.logo} loading="lazy" className="image-11" id="chainLogo" />
-                      <div className="text-block-46" id="chainName">
+                      <div className="text-block-46">
                         {currentChainInfo.name}
                       </div>
                     </div>

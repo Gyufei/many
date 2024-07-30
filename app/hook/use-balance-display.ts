@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Web3Context } from '../web3-context';
 import { Contract, utils } from 'ethers';
 
@@ -13,6 +13,8 @@ export function useBalanceDisplay() {
   const [rewardBalance, setRewardBalance] = useState(0);
 
   async function getRewardBalance(addr: string) {
+    if (!address) return;
+
     const rewardAddress = currentChainInfo?.address.rewardToken;
     const tokenAbi = [
       {
@@ -39,7 +41,7 @@ export function useBalanceDisplay() {
   }
 
   async function getBalance(acc: string) {
-    if (!address) return;
+    if (!acc) return;
 
     const balanceData = await provider.getBalance(acc);
     const balance = utils.formatEther(balanceData);
@@ -56,9 +58,15 @@ export function useBalanceDisplay() {
     getRewardBalance(address);
   }, [address, provider, wallet]);
 
+  const updateBalance = useCallback(() => {
+    getBalance(address);
+    getRewardBalance(address);
+  }, [address, provider, wallet]);
+
   return {
     balance,
     balanceSymbol: currency.symbol,
     rewardBalance,
+    updateBalance,
   };
 }
