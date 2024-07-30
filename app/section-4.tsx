@@ -6,9 +6,8 @@ export default function Section4() {
       <div className="div-block-36">
         <div className="text-block-22">How Many works?</div>
         <div className="text-block-23">
-          Many is a process, project, time, and knowledge management platform that provides amazing collaboration
+          {/* Many is a process, project, time, and knowledge management platform that provides amazing collaboration */}
           <br />
-          opportunities for developers and product teams alike.
         </div>
         <div className="div-block-38">
           <Link href="" className="div-block-37">
@@ -36,7 +35,7 @@ export default function Section4() {
           </div>
           <div>
             <div className="text-block-29">Total Supply</div>
-            <div className="text-block-30">10,000</div>
+            <div className="text-block-30">210,000,000</div>
           </div>
         </div>
       </div>

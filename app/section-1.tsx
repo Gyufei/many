@@ -19,9 +19,8 @@ export default function Section1() {
             OF POW
           </div>
           <div className="text-block-3">
-            Many, an omen-so one platserves as an all-in-one replacement of Linear, Jira,
+            Many, perform the art of PoW on qualified chains.
             <br />
-            Slack, and Notion.
           </div>
           <LearnMoreBtn />
         </div>
