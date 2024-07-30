@@ -6,6 +6,7 @@ import { utils } from 'ethers';
 import { formatDistanceToNow } from 'date-fns';
 import { Paths } from './lib/PathMap';
 import { formatEther } from 'ethers/lib/utils';
+import { chainNameMap } from './lib/const';
 
 export default function Section3() {
   const { currentChainInfo, currentWalletInfo, provider, readContract: contract } = useContext(Web3Context);
@@ -37,11 +38,7 @@ export default function Section3() {
     }
 
     const path = Paths.activities;
-    const chainMap = {
-      Mantle: 'mantle_sepolia',
-      Eth: 'devnet',
-    };
-    const chainParams = `chain_name=${chainMap[currentChainInfo.name]}`;
+    const chainParams = `chain_name=${chainNameMap[currentChainInfo.name]}`;
     const addressParams = currentWalletInfo ? `account=${currentWalletInfo?.address || ''}` : '';
     const queryParams = `${chainParams}${addressParams ? '&' : ''}${addressParams}`;
     const queryPath = `${path}?${queryParams}`;

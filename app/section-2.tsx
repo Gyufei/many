@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Web3Context } from './web3-context';
-import { Chains, ChainName } from './lib/const';
+import { Chains, ChainName, chainNameMap } from './lib/const';
 import { useRpcInput } from './hook/use-rpc-input';
 import NewWalletDialog from './new-wallet-dialog';
 import { CopyBtn } from './copy-btn';
@@ -163,6 +163,7 @@ export default function Section2() {
 
   async function fetchMineSignature(minedHash: string, salt: string) {
     const path = Paths.mine;
+    const chainName = chainNameMap[currentChainInfo.name];
     const res = await fetch(path, {
       method: 'POST',
       headers: {
@@ -172,6 +173,7 @@ export default function Section2() {
         minedHash,
         salt,
         wallet: currentWalletInfo.address,
+        chain_name: chainName,
       }),
     });
 
@@ -459,9 +461,7 @@ export default function Section2() {
                   <div className="dropdown-toggle w-dropdown-toggle">
                     <div className="div-block-63">
                       <img width="32" height="32" alt="" src={currentChainInfo.logo} loading="lazy" className="image-11" id="chainLogo" />
-                      <div className="text-block-46">
-                        {currentChainInfo.name}
-                      </div>
+                      <div className="text-block-46">{currentChainInfo.name}</div>
                     </div>
                     <img loading="lazy" src="images/down-one-2-1.svg" alt="" className="image-10" />
                   </div>

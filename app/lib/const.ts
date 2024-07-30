@@ -95,3 +95,8 @@ export const ChainMap: Record<string, IChainInfo> = Chains.reduce((acc, chain) =
   acc[chain.name] = chain;
   return acc;
 }, {} as any);
+
+export const chainNameMap = {
+  Mantle: 'mantle_sepolia',
+  Eth: 'devnet',
+};
