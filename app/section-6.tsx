@@ -18,8 +18,7 @@ export default function Section6() {
               className="image-21"
             />
             <div className="text-block-40">
-              Many offers a wide range of features to create and manage your project documentation. suite of collaborative editing tools
-              boosts team efficiency.
+              Many offers a wide range of features to create and manage your mining power. 
             </div>
           </Link>
           <Link href="">
@@ -34,8 +33,7 @@ export default function Section6() {
               className="image-22"
             />
             <div className="text-block-40">
-              Many offers a wide range of features to create and manage your project documentation. suite of collaborative editing tools
-              boosts team efficiency.
+            Many offers a wide range of features to create and manage your mining power. 
             </div>
           </Link>
         </div>

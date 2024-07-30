@@ -14,8 +14,8 @@ export default function Section5() {
           <div className="text-block-32">mining guards</div>
         </div>
         <div className="text-block-33">
-          Manage your tasks efficiently with bidirectional GitHub synchronization. Use as an advanced front-end for GitHub Issues and GitHub
-          Projects.
+          {/* Manage your tasks efficiently with bidirectional GitHub synchronization. Use as an advanced front-end for GitHub Issues and GitHub
+          Projects. */}
         </div>
         <NFTDisplay />
       </div>
