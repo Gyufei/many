@@ -14,23 +14,53 @@ export default function RateChart(props: any) {
 
   const { hashRate } = useContext(Web3Context);
 
-  useEffect(() => {
-    if (hashRate) {
-      const x = new Date().getTime();
-      const series = chartComponentRef.current?.chart?.series[0];
-      series && series.addPoint([x, Number(hashRate)], true, true, true);
+  const chartInitData = useMemo(() => {
+    const data = [];
+    const time = new Date().getTime() - 2400000;
+
+    const dataInterSecond = 1;
+    for (let i = 0; i < 2400 / dataInterSecond; i++) {
+      data.push({
+        x: time + i * (dataInterSecond * 1000),
+        y: 0,
+      });
     }
 
+    return data;
+  }, []);
+
+  useEffect(() => {
+    if (!hashRate) {
+      return;
+    }
+
+    const x = new Date().getTime();
+    const series = chartComponentRef.current?.chart?.series[0];
+    series && series.addPoint([x, Number(hashRate)], true, false);
+
+    updateXRange(x);
+  }, [hashRate]);
+
+  useEffect(() => {
     const inter = setInterval(() => {
       const x = new Date().getTime();
-      const series = chartComponentRef.current?.chart?.series[0];
-      series && series.addPoint([x, Number(hashRate)], true, true, true);
+      const chartInst = chartComponentRef.current?.chart;
+      const series = chartInst?.series[0];
+      series && series.addPoint([x, Number(hashRate)], true, false);
+
+      updateXRange(x);
     }, 60000);
 
     return () => clearInterval(inter);
-  }, [hashRate]);
+  }, []);
 
-  const [data, setData] = React.useState<any[]>([]);
+  function updateXRange(x: number) {
+    const chartInst = chartComponentRef.current?.chart;
+    const xAxis = chartInst?.xAxis[0] as any;
+    const min = x - 2400000;
+    const max = x + 1200000;
+    xAxis && xAxis.setExtremes(min, max);
+  }
 
   const options = useMemo<Options>(
     () => ({
@@ -89,7 +119,7 @@ export default function RateChart(props: any) {
         lineWidth: 1,
         lineColor: '#2C2B2B',
         min: -1,
-        max: 1000,
+        max: 100,
         gridLineWidth: 1,
         gridLineColor: 'rgba(255, 255, 255, 0.2)',
         tickWidth: 0,
@@ -105,18 +135,7 @@ export default function RateChart(props: any) {
           name: 'Mining',
           type: 'line',
           lineColor: '#F79217',
-          data: (function () {
-            const data = [];
-            const time = new Date().getTime() - 2400000;
-
-            for (let i = 0; i < 2400 / 15; i++) {
-              data.push({
-                x: time + i * (15 * 1000),
-                y: 0,
-              });
-            }
-            return data;
-          })(),
+          data: chartInitData,
         },
       ],
       legend: {

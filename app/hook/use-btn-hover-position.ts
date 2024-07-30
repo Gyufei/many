@@ -20,7 +20,6 @@ export function useBtnHoverPosition() {
 
   const handleMouseMove = (event: any) => {
     const buttonRect = event.currentTarget.getBoundingClientRect();
-    console.log(buttonRect);
     const x = event.clientX - buttonRect.left;
     setBlockPosition(x);
   };

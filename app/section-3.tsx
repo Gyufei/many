@@ -19,7 +19,7 @@ export default function Section3() {
 
   const displayLogs = useMemo(() => {
     let logs = currentTab === 'mine' ? mineLogs : globalLogs;
-    const sortLogs = logs.sort((a, b) => b.blockNumber - a.blockNumber);
+    const sortLogs = logs.sort((a, b) => b.block_number - a.block_number);
     return sortLogs;
   }, [currentWalletInfo, currentTab, globalLogs]);
 
@@ -146,35 +146,40 @@ export default function Section3() {
             </div>
           </div>
         </div>
-        <div className="div-block-27">
-          {displayLogs.map((log) => (
-            <div key={log.block_number} className="div-block-29">
-              <div className="div-block-30">
-                <div className="div-block-28">
-                  <img src="images/mining.svg" loading="lazy" width="48" height="48" alt="" className="image-pla" />
-                </div>
-                <div className="div-block-31">
-                  <div className="text-block-16">#{log.block_number}</div>
-                  <div className="text-block-17">{formatDistanceToNow(log.create_at)}</div>
-                </div>
-              </div>
-              <div className="div-block-32">
-                <div>
-                  <div className="div-block-33">
-                    <div className="text-block-18">Miner</div>
-                    <div className="text-block-19">{displayHash(log.miner)}</div>
+        <div className="act-block">
+          <video playsInline muted loop autoPlay className="video-4" src="images/activities.mp4"></video>
+          <div className="div-block-27">
+            <div className="div-block-27-content trans-scroll-bar">
+              {displayLogs.map((log) => (
+                <div key={log.block_number} className="div-block-29">
+                  <div className="div-block-30">
+                    <div className="div-block-28">
+                      <img src="images/mining.svg" loading="lazy" width="48" height="48" alt="" className="image-pla" />
+                    </div>
+                    <div className="div-block-31">
+                      <div className="text-block-16">#{log.block_number}</div>
+                      <div className="text-block-17">{formatDistanceToNow(log.create_at)}</div>
+                    </div>
                   </div>
-                  <div className="div-block-34">
-                    <div className="text-block-18">Hash</div>
-                    <div>{displayHash(log.tx_hash)}</div>
+                  <div className="div-block-32">
+                    <div>
+                      <div className="div-block-33">
+                        <div className="text-block-18">Miner</div>
+                        <div className="text-block-19">{displayHash(log.miner)}</div>
+                      </div>
+                      <div className="div-block-34">
+                        <div className="text-block-18">Hash</div>
+                        <div>{displayHash(log.tx_hash)}</div>
+                      </div>
+                    </div>
+                    <div className="div-block-35">
+                      <div className="text-block-21">{Number(log.rewards)} MANY</div>
+                    </div>
                   </div>
                 </div>
-                <div className="div-block-35">
-                  <div className="text-block-21">{Number(log.rewards)} MANY</div>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
