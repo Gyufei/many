@@ -55,7 +55,7 @@ const EthChain: IChainInfo = {
     manyDeployBlock: 20706,
     marketPlace: '0x4C05f6EFBA9fc9371f95b32Fea56e67E0E4Bd6CE',
     MineNFTIds: [1, 2, 3],
-    rewardToken: '0xC179da1fcDE35d63a8eB46eA50Bf363719f3aB05',
+    rewardToken: '0x427375043641C1333bD444484AbC1174b08C8Cec',
   },
 };
 
@@ -85,7 +85,7 @@ const MantleChain: IChainInfo = {
     manyDeployBlock: 10041935,
     marketPlace: '0x8a9AB1363BA18042CC1972af5eA2149A4a70a688',
     MineNFTIds: [1, 2, 3],
-    rewardToken: '0xCBAe5391EeD805Ec6497b44788b9C7E37445F752',
+    rewardToken: '0x1a700ad6fE47DDBeDC788E7FfD31415645274EEf',
   },
 };
 
