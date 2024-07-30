@@ -1868,7 +1868,7 @@
 
   .light-bg {
     top: -65px;
-    left: -126px;
+    left: calc(-341px + 50vw);
   }
 
   .video-2 {
