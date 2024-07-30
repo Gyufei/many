@@ -5,13 +5,13 @@ import { Web3Context } from './web3-context';
 import { Chains, ChainName } from './lib/const';
 import BigNumber from 'bignumber.js';
 import { useRpcInput } from './hook/use-rpc-input';
-import { useBalanceDisplay } from './hook/use-balance-display';
 import NewWalletDialog from './new-wallet-dialog';
 import { CopyBtn } from './copy-btn';
 import { Paths } from './lib/PathMap';
 import { NFTContext } from './nft-context';
 import { constants } from 'ethers';
 import { IWallet } from './hook/use-wallet';
+import { BalanceDisplay } from './balance-display';
 
 let CurrentHash: string = '';
 let InfoTimeout: number;
@@ -38,8 +38,6 @@ export default function Section2() {
 
   const { currentRpc, showRpcInput, setShowRpcInput, customRpcValue, setCustomRpcValue, handleInputKeyDown, handleOnBlur, handleSaveRpc } =
     useRpcInput(currentChainInfo?.id);
-
-  const { balance, balanceSymbol } = useBalanceDisplay();
 
   const [rpcBlockHover, setRpcBlockHover] = useState(false);
   const [showWalletSelect, setShowWalletSelect] = useState(false);
@@ -438,12 +436,7 @@ export default function Section2() {
                   )}
                 </div>
               </div>
-              <div className="div-block-16">
-                <div className="text-block-9">balance</div>
-                <div className="text-block-10" id="balance">
-                  {balance} {balanceSymbol}
-                </div>
-              </div>
+              <BalanceDisplay />
             </div>
             <div className="div-block-17">
               <div>
