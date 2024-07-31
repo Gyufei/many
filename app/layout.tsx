@@ -8,6 +8,8 @@ import { Web3Provider } from './web3-context';
 import { NFTProvider } from './nft-context';
 import Head from 'next/head';
 import { isProduction } from './lib/PathMap';
+import { GlobalMsgProvider } from './global-msg-context';
+import GlobalActionTip from './global-action-tip';
 
 export const metadata = {
   title: {
@@ -59,9 +61,12 @@ export default function RootLayout({
     <html lang="en">
       <Head>{!isProduction ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}</Head>
       <body className={`${inter.variable}`}>
-        <Web3Provider>
-          <NFTProvider>{children}</NFTProvider>
-        </Web3Provider>
+        <GlobalMsgProvider>
+          <Web3Provider>
+            <NFTProvider>{children}</NFTProvider>
+          </Web3Provider>
+          <GlobalActionTip />
+        </GlobalMsgProvider>
       </body>
     </html>
   );

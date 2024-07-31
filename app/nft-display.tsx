@@ -3,10 +3,15 @@ import { useContext, useState } from 'react';
 import { NFTContext } from './nft-context';
 import { Paths } from './lib/PathMap';
 import { Web3Context } from './web3-context';
+import { GlobalMsgContext } from './global-msg-context';
+import { useBalanceDisplay } from './hook/use-balance-display';
 
 export default function NFTDisplay() {
+  const { setGlobalMessage } = useContext(GlobalMsgContext);
   const { currentChainInfo, currentWalletInfo, contract } = useContext(Web3Context);
   const { mineNFTIds: MineNFTIds, marketPlaceContract, queryNFTNums } = useContext(NFTContext);
+
+  const { balance } = useBalanceDisplay();
 
   const [selectedNFTId, setSelectedNFTId] = useState<number>();
 
@@ -46,20 +51,36 @@ export default function NFTDisplay() {
   }
 
   async function handleBuyNFT() {
-    const { signature, orderId, merkleProof } = await fetchBuySignature();
+    if (currentWalletInfo) {
+      setGlobalMessage({ type: 'warning', message: 'No Account!' });
+      return;
+    }
 
-    const serialId = selectedNFTId || 1;
-    const serialIdPrice = await marketPlaceContract.serialIdPriceMap(serialId);
-    const gasLimit = await (marketPlaceContract.estimateGas as any)['buyMineNFT'](serialId, orderId, merkleProof, signature, {
-      value: serialIdPrice,
-    });
+    if (Number(balance) <= 0) {
+      setGlobalMessage({ type: 'warning', message: 'Insufficient Gas!' });
+      return;
+    }
 
-    const res = await marketPlaceContract.buyMineNFT(serialId, orderId, merkleProof, signature, {
-      value: serialIdPrice,
-      gasLimit: gasLimit.toString(),
-    });
+    try {
+      const { signature, orderId, merkleProof } = await fetchBuySignature();
 
-    await queryNFTNums();
+      const serialId = selectedNFTId || 1;
+      const serialIdPrice = await marketPlaceContract.serialIdPriceMap(serialId);
+      const gasLimit = await (marketPlaceContract.estimateGas as any)['buyMineNFT'](serialId, orderId, merkleProof, signature, {
+        value: serialIdPrice,
+      });
+
+      const res = await marketPlaceContract.buyMineNFT(serialId, orderId, merkleProof, signature, {
+        value: serialIdPrice,
+        gasLimit: gasLimit.toString(),
+      });
+
+      setGlobalMessage({ type: 'success', message: 'Successful Buy!' });
+
+      await queryNFTNums();
+    } catch (e) {
+      setGlobalMessage({ type: 'error', message: 'Failed Buy!' });
+    }
   }
 
   return (

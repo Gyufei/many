@@ -67,6 +67,7 @@ export default function RateChart(props: any) {
       chart: {
         backgroundColor: '#050303',
         type: 'line',
+        marginLeft: 0,
       },
       title: {
         text: 'My hashrate',

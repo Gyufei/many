@@ -9,6 +9,12 @@ export default function NewWalletDialog() {
   const [isHover, setIsHover] = useState(false);
   const [newWallet, setNewWallet] = useState<Wallet | null>(null);
 
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    setInit(true);
+  }, []);
+
   const initNew = useMemo(() => {
     return !wallets.length;
   }, [newWallet]);
@@ -58,6 +64,8 @@ export default function NewWalletDialog() {
 
     setVisible(false);
   }
+
+  if (!init) return null;
 
   return (
     <>
@@ -121,7 +129,7 @@ export default function NewWalletDialog() {
                 }}
               >
                 <div className="wallet-new-dialog-phrase-index">{index + 1}</div>
-                <span>{item}</span>
+                <span className='wallet-new-dialog-phrase-text'>{item}</span>
               </div>
             ))}
           </div>

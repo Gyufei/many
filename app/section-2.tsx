@@ -11,6 +11,7 @@ import { NFTContext } from './nft-context';
 import { constants } from 'ethers';
 import { IWallet } from './hook/use-wallet';
 import { useBalanceDisplay } from './hook/use-balance-display';
+import { GlobalMsgContext } from './global-msg-context';
 
 let CurrentHash: string = '';
 let InfoTimeout: number;
@@ -31,6 +32,8 @@ export default function Section2() {
   } = useContext(Web3Context);
 
   const { currentNFTInfo } = useContext(NFTContext);
+
+  const { setGlobalMessage } = useContext(GlobalMsgContext);
 
   const { balance, balanceSymbol, rewardBalance, updateBalance } = useBalanceDisplay();
 
@@ -218,6 +221,12 @@ export default function Section2() {
 
   async function mineStart() {
     if (!currentWalletInfo) {
+      setGlobalMessage({ type: 'error', message: 'No Account!' });
+      return;
+    }
+
+    if (Number(balance) <= 0) {
+      setGlobalMessage({ type: 'error', message: 'Insufficient Gas!' });
       return;
     }
 
@@ -271,6 +280,7 @@ export default function Section2() {
       );
     } catch (e) {
       console.log('mine failed', e);
+      setGlobalMessage({ type: 'error', message: 'Mine Failed!' });
       mineStop();
     }
   }
@@ -588,7 +598,7 @@ export default function Section2() {
                   <strong>mining Guard</strong>
                 </div>
                 <div className="text-block-10">
-                  <strong>N/A</strong>
+                  <strong>{currentNFTInfo?.id || 'N/A'}</strong>
                 </div>
               </div>
             </div>

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { GlobalMsgContext } from './global-msg-context';
 
 export function CopyBtn({ address }: { address: string }) {
+  const { setGlobalMessage } = useContext(GlobalMsgContext);
   const [isHover, setIsHover] = useState(false);
 
   function handleCopy() {
@@ -9,6 +11,7 @@ export function CopyBtn({ address }: { address: string }) {
     }
 
     navigator.clipboard.writeText(address);
+    setGlobalMessage({ type: 'success', message: 'Copied!' });
   }
 
   return (
