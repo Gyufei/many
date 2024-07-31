@@ -52,7 +52,7 @@ export default function Section3() {
         console.error(jsonRes);
         return;
       }
-      const { global_mine_info, account_mine_info } = jsonRes.data;
+      const { global_mine_info, account_mine_info, last_block } = jsonRes.data;
 
       const gLogs = global_mine_info.map((log: any) => {
         return {
@@ -71,7 +71,7 @@ export default function Section3() {
       setMineLogs(mLogs);
       setGlobalLogs(gLogs);
 
-      const lastEndBlock = gLogs.length ? gLogs[gLogs.length - 1].block_number : currentChainInfo.address.manyDeployBlock;
+      const lastEndBlock = last_block || (await provider.getBlockNumber());
       updateQuery(Number(lastEndBlock));
     } catch (error) {
       console.error('fetch log error', error);
