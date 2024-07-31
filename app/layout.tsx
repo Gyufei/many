@@ -13,17 +13,17 @@ import GlobalActionTip from './global-action-tip';
 
 export const metadata = {
   title: {
-    template: '%s | Many',
-    default: 'Many',
+    template: '%s - Many Gold | PoWFi',
+    default: 'Many Gold | PoWFi',
   },
   description: '',
   metadataBase: new URL(`https://${process.env.VERCEL_DOMAIN}`),
   openGraph: {
-    title: 'Many',
-    description: '',
+    title: 'Many Gold',
+    description: 'Replay the art of PoW on qualified chains.',
     url: `https://${process.env.VERCEL_DOMAIN}`,
     siteName: 'Many',
-    images: '/images/GGzCP6QaAAAm9YG.png',
+    images: '/images/907d507a.png',
     locale: 'en_US',
     type: 'website',
   },
@@ -45,10 +45,10 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Many',
-    description: '',
-    creator: '@Many',
-    images: ['/images/GGzCP6QaAAAm9YG.png'],
+    title: 'Many Gold | PoWFi',
+    description: 'Replay the art of PoW on qualified chains.',
+    creator: '@many_pow',
+    images: ['/images/907d507a.png'],
   },
 };
 

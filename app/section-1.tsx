@@ -19,7 +19,7 @@ export default function Section1() {
             OF POW
           </div>
           <div className="text-block-3">
-            Many, perform the art of PoW on qualified chains.
+            Many, replay the art of PoW on qualified chains.
             <br />
           </div>
           <LearnMoreBtn />
@@ -34,7 +34,7 @@ export default function Section1() {
         </div>
       </div>
       <div className="div-block-8">
-        <div className="text-block-5">fair launch · barrier-free · immutable code · Inbox</div>
+        <div className="text-block-5">fair launch · no VC · no team allocation · no pre-sale · sybil disincentive</div>
       </div>
     </section>
   );
