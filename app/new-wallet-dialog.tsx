@@ -129,7 +129,7 @@ export default function NewWalletDialog() {
                 }}
               >
                 <div className="wallet-new-dialog-phrase-index">{index + 1}</div>
-                <span className='wallet-new-dialog-phrase-text'>{item}</span>
+                <span className="wallet-new-dialog-phrase-text">{item}</span>
               </div>
             ))}
           </div>
@@ -169,25 +169,9 @@ export default function NewWalletDialog() {
       </div>
       {initNew ? (
         <div className="div-block-10 div-block-new-w">
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              gap: '40px',
-            }}
-          >
-            <img src="images/create-account.svg" loading="lazy" alt="" className="image-20" />
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginLeft: '8px',
-                gap: '16px',
-              }}
-            >
+          <div className="div-block-new-con">
+            <img src="images/create-account.svg" loading="lazy" alt="" className="image-new-w" />
+            <div className="div-block-new-content">
               <div className="text-block-639">CREATE AN ACCOUNT</div>
               <div className="text-block-640">Before mining, you need to have an account</div>
             </div>
