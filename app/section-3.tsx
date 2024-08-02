@@ -33,6 +33,10 @@ export default function Section3() {
   }
 
   async function fetchLog() {
+    if (!currentWalletInfo) {
+      return;
+    }
+
     if (updateTimerId) {
       clearTimeout(updateTimerId);
     }
