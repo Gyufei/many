@@ -149,7 +149,7 @@ export default function Section3() {
           </div>
         </div>
         <div className="act-block">
-          <video playsInline muted loop autoPlay className="video-4" src="images/activities.mp4"></video>
+          <video playsInline muted loop autoPlay className="video-4" src="images/activities.mov"></video>
           <div className="div-block-27">
             <div className="div-block-27-content trans-scroll-bar">
               {displayLogs.map((log) => (

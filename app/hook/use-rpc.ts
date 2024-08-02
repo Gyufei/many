@@ -8,7 +8,7 @@ export function useRpc(currentChain: ChainName) {
 
   const [customRpcMap, setCustomRpcMap] = useState<Record<ChainName, string>>({
     Mantle: '',
-    Eth: '',
+    testEth: '',
   });
 
   const isCustomRpc = useMemo(() => {
@@ -38,7 +38,7 @@ export function useRpc(currentChain: ChainName) {
   }, []);
 
   useEffect(() => {
-    if (customRpcMap.Mantle || customRpcMap.Eth) {
+    if (customRpcMap.Mantle || customRpcMap.testEth) {
       const serializedValue = JSON.stringify(customRpcMap);
       localStorage.setItem(StorageKey, serializedValue);
     }

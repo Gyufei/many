@@ -14,4 +14,5 @@ export const Paths = {
   mine: WithHost('/mine'),
   buyNFT: WithHost('/buyNFT'),
   activities: WithHost('/activeties'),
+  faucet: WithHost('/faucet')
 };

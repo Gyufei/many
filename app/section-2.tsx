@@ -12,6 +12,7 @@ import { constants } from 'ethers';
 import { IWallet } from './hook/use-wallet';
 import { useBalanceDisplay } from './hook/use-balance-display';
 import { GlobalMsgContext } from './global-msg-context';
+import FaucetIcon from './faucet-icon';
 
 let CurrentHash: string = '';
 let InfoTimeout: number;
@@ -520,11 +521,11 @@ export default function Section2() {
                   display: 'flex',
                   alignItems: 'flex-end',
                 }}
-                onMouseEnter={() => setRpcBlockHover(true)}
-                onMouseLeave={() => setRpcBlockHover(false)}
               >
                 {!showRpcInput ? (
                   <div
+                    onMouseEnter={() => setRpcBlockHover(true)}
+                    onMouseLeave={() => setRpcBlockHover(false)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -584,6 +585,7 @@ export default function Section2() {
                     />
                   </>
                 )}
+                <FaucetIcon onSuccess={() => updateBalance()} />
               </div>
             </div>
             <div className="div-block-19">

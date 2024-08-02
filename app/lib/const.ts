@@ -1,6 +1,6 @@
 export interface IChainInfo {
   id: number;
-  name: 'Mantle' | 'Eth';
+  name: 'Mantle' | 'testEth';
   logo: string;
   nativeCurrency: {
     decimals: number;
@@ -14,7 +14,6 @@ export interface IChainInfo {
     default: {
       name: string;
       url: string;
-      apiUrl: string;
     };
   };
   testnet: boolean;
@@ -32,7 +31,7 @@ export type ChainName = IChainInfo['name'];
 // Eth Testnet
 const EthChain: IChainInfo = {
   id: 1337,
-  name: 'Eth',
+  name: 'testEth',
   logo: 'images/eth.svg',
   nativeCurrency: {
     decimals: 18,
@@ -40,13 +39,12 @@ const EthChain: IChainInfo = {
     symbol: 'ETH',
   },
   rpcUrls: {
-    http: 'https://devnet-rpc.aggregation.top/',
+    http: 'https://test-rpc.many.gold/ ',
   },
   blockExplorers: {
     default: {
       name: 'Testnet Explorer',
-      url: 'https://devnet-explorer.aggregation.top/',
-      apiUrl: 'https://devnet-explorer.aggregation.top/api',
+      url: 'https://test-scan.many.gold/',
     },
   },
   testnet: true,
@@ -76,7 +74,6 @@ const MantleChain: IChainInfo = {
     default: {
       name: 'Mantle Testnet Explorer',
       url: 'https://explorer.sepolia.mantle.xyz/',
-      apiUrl: 'https://explorer.sepolia.mantle.xyz/api',
     },
   },
   testnet: true,
@@ -89,14 +86,14 @@ const MantleChain: IChainInfo = {
   },
 };
 
-export const Chains = [MantleChain, EthChain];
+export const Chains = [EthChain];
 
 export const ChainMap: Record<string, IChainInfo> = Chains.reduce((acc, chain) => {
   acc[chain.name] = chain;
   return acc;
 }, {} as any);
 
-export const chainNameMap = {
+export const chainNameMap: Record<ChainName, string> = {
   Mantle: 'mantle_sepolia',
-  Eth: 'devnet',
+  testEth: 'devnet',
 };

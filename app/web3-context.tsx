@@ -33,7 +33,7 @@ interface IWeb3Context {
 export const Web3Context = createContext<IWeb3Context>({} as any);
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
-  const [currentChain, setCurrentChain] = useState<ChainName>('Mantle');
+  const [currentChain, setCurrentChain] = useState<ChainName>('testEth');
   const currentChainInfo = ChainMap[currentChain];
 
   const { currentRpc, isCustomRpc, setCustomRpc } = useRpc(currentChain);
