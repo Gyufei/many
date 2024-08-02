@@ -34,7 +34,22 @@ export default function Section1() {
         </div>
       </div>
       <div className="div-block-8">
-        <div className="text-block-5">fair launch · no VC · no team allocation · no pre-sale · sybil disincentive</div>
+        <ul className="carousel-container">
+          <li className="carousel-item no-before">FAIR LAUNCH</li>
+          <li className="carousel-item">NO VC</li>
+          <li className="carousel-item">NO TEAM ALLOCATION</li>
+          <li className="carousel-item">NO PRE-SALE</li>
+          <li className="carousel-item">SYBIL DISINCENTIVE</li>
+        </ul>
+
+        <ul className="carousel-container-hidden carousel-container">
+          <li className="carousel-item">FAIR LAUNCH</li>
+          <li className="carousel-item">NO VC</li>
+          <li className="carousel-item">NO TEAM ALLOCATION</li>
+          <li className="carousel-item">NO PRE-SALE</li>
+          <li className="carousel-item">SYBIL DISINCENTIVE</li>
+        </ul>
+        {/* <div className="text-block-5"></div> */}
       </div>
     </section>
   );
