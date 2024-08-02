@@ -4,7 +4,7 @@ import { Web3Context } from './web3-context';
 import { Paths } from './lib/PathMap';
 
 export default function FaucetIcon({ onSuccess }: { onSuccess: () => void }) {
-  const { currentWalletInfo } = useContext(Web3Context);
+  const { currentWalletInfo, provider } = useContext(Web3Context);
   const { setGlobalMessage } = useContext(GlobalMsgContext);
 
   const address = currentWalletInfo.address;
@@ -36,6 +36,23 @@ export default function FaucetIcon({ onSuccess }: { onSuccess: () => void }) {
     return null;
   }
 
+  async function checkTxStatus(tx: string) {
+    const receipt = await provider.getTransactionReceipt(tx);
+
+    if (receipt?.status === 1) {
+      return true;
+    } else if (receipt?.status === 0) {
+      return false;
+    } else {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const res = checkTxStatus(tx);
+          resolve(res);
+        }, 500);
+      });
+    }
+  }
+
   async function handleFaucet() {
     const key = 'lastClaimTime' + '-' + address;
     var lastClaimTime = getCookie(key);
@@ -46,11 +63,18 @@ export default function FaucetIcon({ onSuccess }: { onSuccess: () => void }) {
         const res = await claimAction();
 
         if (res.transaction) {
-          setCookie(key, currentTime, 1);
-          setGlobalMessage({ type: 'success', message: 'Drop Successfully' });
-          onSuccess();
+          const txStatus = await checkTxStatus(res.transaction);
+          console.log(txStatus);
+          if (txStatus) {
+            setCookie(key, currentTime, 1);
+            setGlobalMessage({ type: 'success', message: 'Drop Successfully' });
+            onSuccess();
+          } else {
+            throw new Error('drop failed');
+          }
         }
       } catch (e) {
+        console.error(e);
         setGlobalMessage({ type: 'error', message: 'Drop Failed' });
       }
     } else {
