@@ -65,6 +65,9 @@ export default function Section2() {
   }, [address]);
 
   function handleSelectWallet(address: string) {
+    if (currentWalletInfo && address) {
+      setGlobalMessage({ type: 'success', message: 'Wallet Changed' });
+    }
     setCurrentWallet(address);
     setShowWalletSelect(false);
   }
@@ -221,7 +224,7 @@ export default function Section2() {
 
   async function mineStart() {
     if (!currentWalletInfo) {
-      setGlobalMessage({ type: 'error', message: 'No Account!' });
+      setGlobalMessage({ type: 'error', message: 'No Wallet!' });
       return;
     }
 
@@ -349,6 +352,7 @@ export default function Section2() {
 
   function handleDeleteWallet(wa: IWallet) {
     deleteWallet(wa.address);
+    setGlobalMessage({ type: 'success', message: 'Wallet Deleted Successfully' });
   }
 
   return (
@@ -597,9 +601,7 @@ export default function Section2() {
                 <div className="text-block-9">
                   <strong>mining Guard</strong>
                 </div>
-                <div className="text-block-10">
-                  <strong>{currentNFTInfo?.id || 'N/A'}</strong>
-                </div>
+                <div className="text-block-103">{currentNFTInfo?.id || 'N/A'}</div>
               </div>
             </div>
             {isMining ? (

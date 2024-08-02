@@ -51,13 +51,13 @@ export default function NFTDisplay() {
   }
 
   async function handleBuyNFT() {
-    if (currentWalletInfo) {
-      setGlobalMessage({ type: 'warning', message: 'No Account!' });
+    if (!currentWalletInfo) {
+      setGlobalMessage({ type: 'error', message: 'No Wallet!' });
       return;
     }
 
     if (Number(balance) <= 0) {
-      setGlobalMessage({ type: 'warning', message: 'Insufficient Gas!' });
+      setGlobalMessage({ type: 'error', message: 'Insufficient Gas!' });
       return;
     }
 
@@ -79,6 +79,7 @@ export default function NFTDisplay() {
 
       await queryNFTNums();
     } catch (e) {
+      console.error(e, 'Failed');
       setGlobalMessage({ type: 'error', message: 'Failed Buy!' });
     }
   }

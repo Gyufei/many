@@ -54,12 +54,14 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   }, [currentWalletInfo, provider]);
 
   const readContract = useMemo(() => {
+    if (!provider) return null;
     const contract = new Contract(currentChainInfo.address.many, ManyABI, provider!);
 
     return contract;
   }, [currentChainInfo, provider]);
 
   const contract = useMemo(() => {
+    if (!wallet) return null;
     const contract = new Contract(currentChainInfo.address.many, ManyABI, wallet!);
 
     return contract;

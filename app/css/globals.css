@@ -333,6 +333,7 @@
 .wallet-new-dialog-title {
   font-size: 24px;
   line-height: 36px;
+  font-weight: bold;
 }
 
 .wallet-new-dialog-subtitle {
@@ -356,6 +357,10 @@
 }
 
 .wallet-new-dialog-phrase-text {
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: capitalize;
+  font-family: var(--font-inter);
   position: relative;
   z-index: 2;
 }
@@ -451,6 +456,13 @@
   line-height: 30px;
 }
 
+.text-block-103 {
+  color: #111;
+  font-size: 22px;
+  line-height: 32px;
+  font-family: var(--font-inter);
+}
+
 .text-block-10 {
   display: flex;
   flex-direction: column;
@@ -543,6 +555,7 @@
 .div-block-20 {
   flex-flow: column;
   align-items: flex-end;
+  justify-content: space-between;
   display: flex;
 }
 
@@ -1574,6 +1587,10 @@
     border-radius: 8px;
   }
 
+  .wallet-new-dialog-phrase-text {
+    line-height: 24px;
+  }
+
   .wallet-new-dialog-btns {
     margin-top: 16px;
   }
@@ -1652,6 +1669,11 @@
     margin-top: 12px;
     font-size: 14px;
     line-height: 20px;
+  }
+
+  .text-block-103 {
+    font-size: 22px;
+    line-height: 32px;
   }
 
   .div-block-161 {

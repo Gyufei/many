@@ -42,37 +42,37 @@ export const NFTProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     queryNFTNums();
-  }, [mineNFTIds, contract, wallet, provider]);
+  }, [mineNFTIds, contract, wallet, provider, currentWalletInfo]);
 
   const queryNFTNum = useCallback(
     async (NFTId: number) => {
-      const nftMiningInfo = await contract.nftMiningInfoMap(NFTId);
-      const nftAddress = nftMiningInfo.nftToken;
-      const NFTAbi = [
-        {
-          type: 'function',
-          name: 'balanceOf',
-          inputs: [
-            {
-              name: 'owner',
-              type: 'address',
-              internalType: 'address',
-            },
-          ],
-          outputs: [
-            {
-              name: '',
-              type: 'uint256',
-              internalType: 'uint256',
-            },
-          ],
-          stateMutability: 'view',
-        },
-      ];
-
-      const NFTContract = new Contract(nftAddress, NFTAbi, wallet!);
-      const currentAddress = currentWalletInfo?.address;
       try {
+        const nftMiningInfo = await contract.nftMiningInfoMap(NFTId);
+        const nftAddress = nftMiningInfo.nftToken;
+        const NFTAbi = [
+          {
+            type: 'function',
+            name: 'balanceOf',
+            inputs: [
+              {
+                name: 'owner',
+                type: 'address',
+                internalType: 'address',
+              },
+            ],
+            outputs: [
+              {
+                name: '',
+                type: 'uint256',
+                internalType: 'uint256',
+              },
+            ],
+            stateMutability: 'view',
+          },
+        ];
+
+        const NFTContract = new Contract(nftAddress, NFTAbi, wallet!);
+        const currentAddress = currentWalletInfo?.address;
         const balance = await NFTContract.balanceOf(currentAddress);
         return {
           id: NFTId,
@@ -80,7 +80,7 @@ export const NFTProvider = ({ children }: { children: React.ReactNode }) => {
           balance: Number(balance.toString()),
         };
       } catch (e) {
-        console.log('query nft num error', e);
+        console.error('query nft num error', e);
         return {
           id: NFTId,
           address: null,
@@ -104,14 +104,14 @@ export const NFTProvider = ({ children }: { children: React.ReactNode }) => {
         setNFTInfos((prev: any) => ({ ...prev, [item.id]: item }));
       }
     } catch (e) {
-      console.log('query nft num error', e);
+      console.log('query all nft num error', e);
     }
-  }, [mineNFTIds]);
+  }, [mineNFTIds, contract, wallet, queryNFTNum]);
 
   const marketPlaceContract = useMemo(() => {
-    const contract = new Contract(currentChainInfo.address.marketPlace, MarketPlaceABI, wallet!);
+    const mkContract = new Contract(currentChainInfo.address.marketPlace, MarketPlaceABI, wallet!);
 
-    return contract;
+    return mkContract;
   }, [currentChainInfo, wallet]);
 
   return (

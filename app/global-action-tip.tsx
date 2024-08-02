@@ -7,7 +7,6 @@ export default function GlobalActionTip() {
   const { globalMessage, setGlobalMessage } = useContext(GlobalMsgContext);
   const { type, message } = globalMessage || {};
 
-  console.log(globalMessage);
   useEffect(() => {
     if (globalMessage) {
       const d = setTimeout(() => {

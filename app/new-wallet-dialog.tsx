@@ -106,7 +106,7 @@ export default function NewWalletDialog() {
               color: 'rgba(17, 17, 17, 0.5)',
             }}
           >
-            Enter your12-word Recovery Phrase
+            Please back up your recovery phrase
           </div>
           <div
             className="wallet-new-dialog-phrase"
