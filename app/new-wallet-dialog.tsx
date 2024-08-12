@@ -97,7 +97,7 @@ export default function NewWalletDialog() {
               color: '#111',
             }}
           >
-            Add Existing Account
+            NEW ACCOUNT CREATED
           </div>
           <div
             className="wallet-new-dialog-subtitle"
