@@ -35,7 +35,7 @@ export default function Section4() {
           </div>
           <div>
             <div className="text-block-29">Total Supply</div>
-            <div className="text-block-30">210,000,000</div>
+            <div className="text-block-30">210,000K</div>
           </div>
         </div>
       </div>

@@ -166,6 +166,9 @@ export default function RateChart(props: any) {
         shared: true,
         useHTML: true,
         backgroundColor: '#222426',
+        borderRadius: 10,
+        borderColor: 'rgba(255, 255, 255, 0.5)', // 50% 透明度的白色边框
+        borderWidth: 1,
         valueDecimals: 2,
         headerFormat:
           '<div style="color: #fff; font-size: 20px; line-height: 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-top: 8px;">{point.y} M/S</div>',
