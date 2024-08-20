@@ -7,7 +7,7 @@ export default function FaucetIcon({ onSuccess }: { onSuccess: () => void }) {
   const { currentWalletInfo, provider } = useContext(Web3Context);
   const { setGlobalMessage } = useContext(GlobalMsgContext);
 
-  const address = currentWalletInfo.address;
+  const address = currentWalletInfo?.address;
 
   const [isHover, setIsHover] = useState(false);
 

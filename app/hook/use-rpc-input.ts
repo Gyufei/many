@@ -1,8 +1,9 @@
 import { providers } from 'ethers';
 import { Web3Context } from '../web3-context';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 export function useRpcInput(currChainId: number) {
+  const rpcInputRef = useRef<HTMLInputElement>(null);
   const { isCustomRpc, setCustomRpc, currentRpc } = useContext(Web3Context);
 
   const [showRpcInput, setShowRpcInput] = useState(false);
@@ -19,12 +20,23 @@ export function useRpcInput(currChainId: number) {
   }
 
   async function handleSaveRpc() {
-    if (!customRpcValue) return null;
+    if (!customRpcValue) {
+      setShowRpcInput(false);
+      return;
+    }
+
     const rpcTestResult = await testRpc();
     if (rpcTestResult) {
       setCustomRpc(customRpcValue);
       setShowRpcInput(false);
     }
+  }
+
+  function showInputAction() {
+    setShowRpcInput(true);
+    setTimeout(() => {
+      rpcInputRef.current?.focus();
+    }, 1000);
   }
 
   async function testRpc() {
@@ -43,10 +55,11 @@ export function useRpcInput(currChainId: number) {
   }
 
   return {
+    rpcInputRef,
     currentRpc,
     showRpcInput,
-    setShowRpcInput,
     customRpcValue,
+    showInputAction,
     setCustomRpcValue,
     handleInputKeyDown,
     handleOnBlur,

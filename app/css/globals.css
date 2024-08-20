@@ -1651,6 +1651,13 @@
     line-height: 20px;
   }
 
+  .text-block-101 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 80px;
+  }
+
   .text-block-103 {
     font-size: 22px;
     line-height: 32px;

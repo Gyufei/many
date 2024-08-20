@@ -41,8 +41,17 @@ export default function Section2() {
   const address = currentWalletInfo?.address || '';
   const currency = currentChainInfo?.nativeCurrency || '';
 
-  const { currentRpc, showRpcInput, setShowRpcInput, customRpcValue, setCustomRpcValue, handleInputKeyDown, handleOnBlur, handleSaveRpc } =
-    useRpcInput(currentChainInfo?.id);
+  const {
+    rpcInputRef,
+    currentRpc,
+    showRpcInput,
+    showInputAction,
+    customRpcValue,
+    setCustomRpcValue,
+    handleInputKeyDown,
+    handleOnBlur,
+    handleSaveRpc,
+  } = useRpcInput(currentChainInfo?.id);
 
   const [rpcBlockHover, setRpcBlockHover] = useState(false);
   const [showWalletSelect, setShowWalletSelect] = useState(false);
@@ -541,7 +550,7 @@ export default function Section2() {
                       {currentRpc}
                     </div>
                     <img
-                      onClick={() => setShowRpcInput(true)}
+                      onClick={() => showInputAction()}
                       src={rpcBlockHover ? 'images/setup-b.svg' : 'images/set-up.svg'}
                       style={{
                         cursor: 'pointer',
@@ -552,14 +561,20 @@ export default function Section2() {
                     />
                   </div>
                 ) : (
-                  <>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-end',
+                    }}
+                  >
                     <input
+                      ref={rpcInputRef}
                       className="rpc-input"
                       style={{
                         height: '48px',
                         lineHeight: '72px',
                         fontSize: '22px',
-                        paddingRight: '36px',
+                        paddingRight: '72px',
                         border: 'none',
                         borderBottom: '2px solid #111',
                         background: 'transparent',
@@ -574,16 +589,14 @@ export default function Section2() {
                       onClick={() => handleSaveRpc()}
                       src="images/save.svg"
                       style={{
-                        position: 'absolute',
                         cursor: 'pointer',
-                        right: '0px',
-                        bottom: '12px',
+                        marginBottom: '2px',
                       }}
                       loading="lazy"
                       alt=""
                       className="image-12"
                     />
-                  </>
+                  </div>
                 )}
                 <FaucetIcon onSuccess={() => updateBalance()} />
               </div>
